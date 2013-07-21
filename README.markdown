@@ -8,22 +8,22 @@ Additionally, this repository comes prepared with an example application and fun
 ## Why
 **You should apply good programming practices to testing. Tests are code. Bad code can contribute considerably to your technical debt. Tests should be DRY.**
 
-## Installation
+<!--## Installation
 1. `pear channel-discover nationalfield.github.com`
 2. `pear install nf/PHPUnit_SeleniumPageObject`
-
+-->
 # Behavior
 ## Getters and Setters
 You should define a getter and setter for each field for usage outside of your functional test. Never manually access the map, locators, or map keys outside of the PageObject.
 
 ## Map
-To remove hard-coded Selenium locators, a `protected $map` variable is defined on every PageObject. Define your map of elements that you reference here:
+The map is defined using CSS selectors.
 
 ```php
 <?php
 protected $map = array(
-    'first_name' = 'css=#account_fname',
-    'last_name' = 'css=$account_lname',
+    'first_name' = '#account_fname',
+    'last_name' = '#account_lname',
 );
 ```
 
@@ -56,9 +56,9 @@ $this->setEmail($object->getEmail());
 ```php
 <?php
 $this->assertEquals($object->getName(),
-    $this->getValueByMap('name'));
+    $this->textByMap('name'));
 $this->assertEquals($object->getEmail(),
-    $this->getValueByMap('email'));
+    $this->textByMap('email'));
 ```
 > Asserting the page's content matches the model
 
@@ -105,9 +105,9 @@ For example:
 ```php
 <?php
 protected $map = array(
-    'first_name' => 'css=#first_name',
-    'last_name' => 'css=#last_name',
-    'save' => 'css=#form_submit'
+    'first_name' => '#first_name',
+    'last_name' => '#last_name',
+    'save' => '#form_submit'
 );
 
 protected $modelSkip = array (

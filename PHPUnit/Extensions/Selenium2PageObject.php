@@ -93,7 +93,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 
 			$element = $this->se->byCssSelector($this->getLocator($arguments[0]));
 
-			array_pop($arguments);
+			array_shift($arguments);
 
 			return call_user_func_array(array($element, $name), $arguments);
 		} else {

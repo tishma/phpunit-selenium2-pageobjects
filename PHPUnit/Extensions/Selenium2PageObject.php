@@ -26,10 +26,19 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 */
 	public function __construct(PHPUnit_Extensions_Selenium2TestCase $test)
 	{
+		echo "CONS\n";
 		$this->se = $test;
-
+		$this->configureMappings();
 		$this->assertPreConditions();
 		$this->assertMapConditions();
+	}
+
+	/**
+	 * Configure mappings
+	 */
+	protected function configureMappings()
+	{
+		// Placeholder
 	}
 
 	/**
@@ -118,5 +127,16 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 		throw new InvalidArgumentException('Map ' . $map . ' is not a valid locator key.');
 	}
 
+	/**
+	 * Add a mapping
+	 *
+	 * @param string $mapping_name
+	 * @param string $mapping_target
+	 */
+	protected function addMapping($mapping_name, $mapping_target) {
+		$this->map[$mapping_name] = $mapping_target;
+	}
+
 }
+
 

@@ -26,7 +26,6 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 */
 	public function __construct(PHPUnit_Extensions_Selenium2TestCase $test)
 	{
-		echo "CONS\n";
 		$this->se = $test;
 		$this->configureMappings();
 		$this->assertPreConditions();

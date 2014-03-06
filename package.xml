@@ -17,9 +17,9 @@
         <email>pear@martinbutt.com</email>
         <active>yes</active>
     </lead>
-    <date>2013-10-21</date>
+    <date>2014-03-06</date>
     <version>
-        <release>0.0.2</release>
+        <release>0.0.3</release>
         <api>0.0.1</api>
     </version>
     <stability>

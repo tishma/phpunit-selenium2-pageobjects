@@ -92,22 +92,34 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 *
 	 * @return mixed
 	 */
+
+
 	public function __call($name, $arguments)
 	{
-		// Only intercept *ByMap calls
-		if (substr($name, -5) == 'ByMap') {
-			// trim off the ByMap
+		// Apply function to each element
+		if (substr($name, -9) == 'EachByMap') {
+			$name = substr($name, 0, -9);
+			$elements = $this->elements($this->using('css selector')->value($this->getLocator($arguments[0])));
+			foreach ($elements as $element) {
+
+				return call_user_func_array(array($element, $name), $arguments);
+			}
+		// Apply function to all elements
+		// For using functions on entire collection of elements, e.g. count()
+		} else if (substr($name, -8) == 'AllByMap') {
+			$name = substr($name, 0, -8);
+			$elements = $this->elements($this->using('css selector')->value($this->getLocator($arguments[0])));
+			return call_user_func($name, $elements);
+		// Apply function to individiual element
+		} else if (substr($name, -5) == 'ByMap') {
+			//trim off the ByMap
 			$name = substr($name, 0, -5);
-
 			$element = $this->se->byCssSelector($this->getLocator($arguments[0]));
-
 			array_shift($arguments);
-
 			return call_user_func_array(array($element, $name), $arguments);
 		} else {
 			return call_user_func_array(array($this->se, $name), $arguments);
 		}
-
 	}
 
 	/**

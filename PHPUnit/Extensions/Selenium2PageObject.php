@@ -61,6 +61,11 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 		// Placeholder
 	}
 
+	public function byMap($name)
+	{
+		return $this->se->byCssSelector($this->getLocator($name));
+	}
+
 	/**
 	 * Convert a *ByMap call to using the real locator string as stored in
 	 * $this->map
@@ -101,7 +106,9 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 			$name = substr($name, 0, -9);
 			$elements = $this->elements($this->using('css selector')->value($this->getLocator($arguments[0])));
 			foreach ($elements as $element) {
-
+				if ($name) == 'select') {
+					$element = $this->se->select($element);
+				}
 				return call_user_func_array(array($element, $name), $arguments);
 			}
 		// Apply function to all elements
@@ -114,7 +121,10 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 		} else if (substr($name, -5) == 'ByMap') {
 			//trim off the ByMap
 			$name = substr($name, 0, -5);
-			$element = $this->se->byCssSelector($this->getLocator($arguments[0]));
+			$element = $this->byMap(arguments[0]);
+			if ($name == 'select') {
+				$element = $this->se->select($element);
+			}
 			array_shift($arguments);
 			return call_user_func_array(array($element, $name), $arguments);
 		} else {

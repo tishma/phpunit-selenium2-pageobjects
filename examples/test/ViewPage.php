@@ -8,6 +8,7 @@ class ViewPage extends PHPUnit_Extensions_Selenium2PageObject_Model
 		'real_name' => '//td[@id="output_your_name"]',
 		'gender' => '//td[@id="output_your_gender"]'
 	);
+
 	protected $modelSkip = array('gender', 'header');
 
 	public function assertPreConditions()

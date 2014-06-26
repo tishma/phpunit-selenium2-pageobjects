@@ -9,6 +9,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * @var PHPUnit_Extensions_Selenium2TestCase
 	 */
 	protected $se;
+
 	/**
 	 * A mapping of unique keys to locator strings. Each one of these is
 	 * validated to ensure it exists on the page when the PageObject is
@@ -98,7 +99,6 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * @return mixed
 	 */
 
-
 	public function __call($name, $arguments)
 	{
 		// Apply function to each element
@@ -159,5 +159,3 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	}
 
 }
-
-

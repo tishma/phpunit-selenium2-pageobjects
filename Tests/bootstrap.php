@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../PHPUnit/Extensions/Selenium2PageObject.php';
-require_once __DIR__ . '/../PHPUnit/Extensions/Selenium2PageObject/Model.php';
+require_once __DIR__ . '/../src/Extensions/Selenium2PageObject.php';
+require_once __DIR__ . '/../src/Extensions/Selenium2PageObject/Model.php';
 
 class MockPageObjectModel extends PHPUnit_Extensions_Selenium2PageObject_Model
 {

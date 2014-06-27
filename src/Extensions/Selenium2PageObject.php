@@ -60,7 +60,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	}
 
 	/**
-	 * Convert a *ByMap call to using the real locator string as stored in
+	 * Convert a *(Each/All)ByMap call to using the real locator string as stored in
 	 * $this->map
 	 *
 	 * @example

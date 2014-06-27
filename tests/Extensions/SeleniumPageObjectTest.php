@@ -12,9 +12,19 @@
  * @package PHPUnit_Selenium2_PageObjects\Tests
  */
 
+/**
+ * Tests for Selenium2PageObject
+ *
+ * @coversDefaultClass PHPUnit_Extensions_Selenium2PageObject
+ */
 class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 {
 
+	/**
+	 * Tests the constructor
+	 *
+	 * @covers ::__construct
+	 */
 	public function testConstructorCallsMapAndPreConditions()
 	{
 		$se = new MockSelenium2TestCase();
@@ -28,6 +38,11 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			'assertMapConditions should be called when instantiated.');
 	}
 
+	/**
+	 * Tests the assertMapConditions method
+	 *
+	 * @covers ::assertMapConditions
+	 */
 	public function testAssertMapConditionsChecksEachMapElement()
 	{
 		$se = new MockSelenium2TestCase();
@@ -46,7 +61,10 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the assertMapConditions with a map element missing
+	 *
 	 * @expectedException PHPUnit_Framework_ExpectationFailedException
+	 * @covers ::assertMapConditions
 	 */
 	public function testAssertMissingMapElementFails()
 	{
@@ -60,6 +78,12 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 		$m->assertMapConditions();
 	}
 
+	/**
+	 * Tests the __call interceptor method
+	 *
+	 * @covers ::__call
+	 * @todo Rewrite for Selenium2TestCase
+	 */
 	public function testCallsMadeByMapGetIntercepted()
 	{
 		$se = new MockSelenium2TestCase();
@@ -84,6 +108,11 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			'the __call method should translate the map key into the map value');
 	}
 
+	/**
+	 * Tests the __call method without ByMap pass through
+	 *
+	 * @covers ::__call
+	 */
 	public function testCallsMadeWithoutByMapPassThrough()
 	{
 		$se = new MockSelenium2TestCase();
@@ -100,6 +129,11 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			'the __call method should translate the map key into the map value');
 	}
 
+	/**
+	 * Tests the getLocator method
+	 *
+	 * @covers ::getLocator
+	 */
 	public function testGetLocatorReturnsMapValue()
 	{
 		$se = new MockSelenium2TestCase();
@@ -113,7 +147,10 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the getLocator method with a missing locator
+	 *
 	 * @expectedException InvalidArgumentException
+	 * @covers ::getLocator
 	 */
 	public function testGetLocatorFailsIfMissing()
 	{

@@ -1,4 +1,7 @@
 # PageObjects
+
+![Travis CI](https://travis-ci.org/ravage84/phpunit-selenium2-pageobjects.svg?branch=master)
+
 PageObjects is the idea of representing a webpage's services through a model, abstracting away the guts of Selenium and the page's structure.
 
 You can (and should) read all about PageObjects here: http://code.google.com/p/selenium/wiki/PageObjects

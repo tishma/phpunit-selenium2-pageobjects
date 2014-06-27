@@ -1,4 +1,4 @@
-# PageObjects
+# PHPUnit Selenium2 PageObjects
 
 [![Build Status @ Travis CI](https://travis-ci.org/ravage84/phpunit-selenium2-pageobjects.svg?branch=master)](http://travis-ci.org/ravage84/phpunit-selenium2-pageobjects)
 
@@ -11,10 +11,23 @@ Additionally, this repository comes prepared with an example application and fun
 ## Why
 **You should apply good programming practices to testing. Tests are code. Bad code can contribute considerably to your technical debt. Tests should be DRY.**
 
-<!--## Installation
-1. `pear channel-discover nationalfield.github.com`
-2. `pear install nf/PHPUnit_SeleniumPageObject`
--->
+# Installation
+If you use Composer, simply add a dependency on ``ravage84/phpunit-selenium2-pageobjects``
+to your project's ``composer.json``.
+
+````
+{
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    }
+}
+````
+
+## Requirements
+- Composer
+- PHP 5.3
+- PHPUnit Selenium 1.3.x
+
 # Behavior
 ## Getters and Setters
 You should define a getter and setter for each field for usage outside of your functional test. Never manually access the map, locators, or map keys outside of the PageObject.

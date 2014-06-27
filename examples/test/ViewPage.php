@@ -13,14 +13,14 @@ class ViewPage extends PHPUnit_Extensions_Selenium2PageObject_Model
 
 	public function assertPreConditions()
 	{
-		$this->se->assertEquals('Viewing your data', $this->textByMap('header'));
+		$this->test->assertEquals('Viewing your data', $this->textByMap('header'));
 	}
 
 	public function assertEqualsModel($object, $message = '')
 	{
 		parent::assertEqualsModel($object, $message);
 
-		$this->se->assertEquals(
+		$this->test->assertEquals(
 			$object->getGenderString(),
 			$this->textByMap('gender')
 		);

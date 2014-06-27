@@ -64,7 +64,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject_Model extends PHPUnit_Exte
 					$expect = (string) $expect;
 				}
 
-				$this->se->assertEquals($expect, $value, $message . ' (' . $field . ')');
+				$this->test->assertEquals($expect, $value, $message . ' (' . $field . ')');
 			}
 		}
 	}

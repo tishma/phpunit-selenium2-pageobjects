@@ -8,7 +8,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 *
 	 * @var PHPUnit_Extensions_Selenium2TestCase
 	 */
-	protected $se;
+	protected $test;
 
 	/**
 	 * A mapping of unique keys to locator strings. Each one of these is
@@ -27,7 +27,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 */
 	public function __construct(PHPUnit_Extensions_Selenium2TestCase $test)
 	{
-		$this->se = $test;
+		$this->test = $test;
 		$this->configureMappings();
 		$this->assertPreConditions();
 		$this->assertMapConditions();
@@ -47,8 +47,8 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	protected function assertMapConditions()
 	{
 		foreach ($this->map as $field => $locator) {
-			$this->se->assertNotNull(
-				$this->se->byCssSelector($locator),
+			$this->test->assertNotNull(
+				$this->test->byCssSelector($locator),
 				'Locator field "' . $field . '" is not present.');
 		}
 	}
@@ -64,7 +64,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 
 	public function byMap($name)
 	{
-		return $this->se->byCssSelector($this->getLocator($name));
+		return $this->test->byCssSelector($this->getLocator($name));
 	}
 
 	/**
@@ -107,7 +107,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 			$elements = $this->elements($this->using('css selector')->value($this->getLocator($arguments[0])));
 			foreach ($elements as $element) {
 				if ($name == 'select') {
-					$element = $this->se->select($element);
+					$element = $this->test->select($element);
 				}
 				return call_user_func_array(array($element, $name), $arguments);
 			}
@@ -123,12 +123,12 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 			$name = substr($name, 0, -5);
 			$element = $this->byMap($arguments[0]);
 			if ($name == 'select') {
-				$element = $this->se->select($element);
+				$element = $this->test->select($element);
 			}
 			array_shift($arguments);
 			return call_user_func_array(array($element, $name), $arguments);
 		} else {
-			return call_user_func_array(array($this->se, $name), $arguments);
+			return call_user_func_array(array($this->test, $name), $arguments);
 		}
 	}
 

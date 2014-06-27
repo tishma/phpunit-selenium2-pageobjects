@@ -13,7 +13,7 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 
 	public function assertPreConditions()
 	{
-		$this->se->assertEquals('Example!', $this->textByMap('header'));
+		$this->test->assertEquals('Example!', $this->textByMap('header'));
 	}
 
 	public function setFromModel($object)
@@ -39,6 +39,6 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 	{
 		$this->clickByMap('save');
 		
-		return new ViewPage($this->se);
+		return new ViewPage($this->test);
 	}
 }

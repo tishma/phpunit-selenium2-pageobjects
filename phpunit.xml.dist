@@ -10,7 +10,7 @@
 
   <testsuites>
     <testsuite name="PHPUnit Selenium2 PageObjects">
-      <directory suffix="Test.php">Tests</directory>
+      <directory suffix="Test.php">tests</directory>
     </testsuite>
   </testsuites>
 

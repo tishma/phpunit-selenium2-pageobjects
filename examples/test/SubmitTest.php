@@ -8,7 +8,8 @@ class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 {
 	public function setUp()
 	{
-		$this->setBrowserUrl('http://po.dev');
+		// Change the URL according to your setup
+		$this->setBrowserUrl('http://localhost/phpunit-selenium2-pageobjects/examples/site/');
 		$this->setBrowser('firefox');
 	}
 

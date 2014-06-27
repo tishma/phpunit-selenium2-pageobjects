@@ -109,7 +109,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 			$name = substr($name, 0, -8);
 			$elements = $this->elements($this->using('css selector')->value($this->getLocator($arguments[0])));
 			return call_user_func($name, $elements);
-		// Apply function to individiual element
+		// Apply function to individual element
 		} else if (substr($name, -5) == 'ByMap') {
 			//trim off the ByMap
 			$name = substr($name, 0, -5);

@@ -39,12 +39,17 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 
 	public function setRealName($value)
 	{
-		$this->sendKeysByMap('real_name', $value);
+		//$this->valueByMap('real_name', $value);
+		$element = $this->byMap('real_name');
+		$element->value($value);
 	}
 
 	public function setGender($gender)
 	{
-		$this->selectByMap('gender', 'label=' . $gender);
+		//$this->selectByMap('gender', 'label=' . $gender);
+		$genderselect = $this->byMap('gender');
+		$genderselect = $this->select($genderselect);
+		$genderselect->selectOptionByLabel($gender);
 	}
 
 	public function save()

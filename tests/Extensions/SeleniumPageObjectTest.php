@@ -21,6 +21,35 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 {
 
 	/**
+	 * The mocked Selenium2TestCase
+	 *
+	 * @var PHPUnit_Extensions_Selenium2TestCase
+	 */
+	protected $test;
+
+	/**
+	 * The page object under test
+	 *
+	 * @var PHPUnit_Extensions_Selenium2PageObject
+	 */
+	protected $pageObject;
+
+	/**
+	 * Prepare a Selenium2TestCase and Selenium2PageObjectmock
+	 */
+	protected function setUp() {
+		parent::setUp();
+
+		$this->test = $this->getMock('PHPUnit_Framework_TestCase');
+		$this->test = $this->getMock(
+			'PHPUnit_Extensions_Selenium2PageObject',
+			array(),
+			array($this->test)
+		);
+
+	}
+
+	/**
 	 * Tests the constructor
 	 *
 	 * @covers ::__construct
@@ -33,9 +62,6 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 
 		$this->assertTrue($page->preConditionsCalled,
 			'assertPreConditions should be called when instantiated.');
-		
-		$this->assertTrue($page->mapConditionsCalled,
-			'assertMapConditions should be called when instantiated.');
 	}
 
 	/**

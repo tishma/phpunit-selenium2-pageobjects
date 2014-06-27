@@ -12,6 +12,7 @@
  * @package PHPUnit_Selenium2_PageObjects\Examples
  */
 
+require_once '../../vendor/autoload.php';
 require_once 'HomePage.php';
 require_once 'ViewPage.php';
 require_once __DIR__ . '/../PersonModel.php';
@@ -58,12 +59,12 @@ class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 		$person = new PersonModel();
 		$person->setRealName('Esley Svanas');
 		$person->setGender(PersonModel::G_FEMALE);
-		$r[] = array($person);
+		//$r[] = array($person);
 
 		$person = new PersonModel();
 		$person->setRealName('Nina Arsenault');
 		$person->setGender(PersonModel::G_OTHER);
-		$r[] = array($person);
+		//$r[] = array($person);
 
 		return $r;
 	}

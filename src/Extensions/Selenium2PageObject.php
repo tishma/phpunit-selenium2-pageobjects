@@ -14,13 +14,28 @@
 
 abstract class PHPUnit_Extensions_Selenium2PageObject
 {
-
 	/**
 	 * The testcase that is utilizing the page object.
 	 *
 	 * @var PHPUnit_Extensions_Selenium2TestCase
 	 */
 	protected $test;
+
+	/**
+	 * The page URL
+	 *
+	 * Should be a relative URL preferably
+	 *
+	 * @var string
+	 */
+	protected $url;
+
+	/**
+	 * The page title
+	 *
+	 * @var string
+	 */
+	protected $pageTitle;
 
 	/**
 	 * The key to UI locator map
@@ -35,16 +50,44 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	protected $map = array();
 
 	/**
-	 * Instantiate the PageObject and validate that the browser in a valid
-	 * state for this PageObject.
+	 * Create the PageObject and set the test/webdriver
 	 *
 	 * @param PHPUnit_Extensions_Selenium2TestCase $test
 	 */
 	public function __construct(PHPUnit_Extensions_Selenium2TestCase $test)
 	{
 		$this->test = $test;
+	}
+
+	/**
+	 * Load the page
+	 *
+	 * @param null|string $url An optional URL to load.
+	 * @return $this
+	 * @see PHPUnit_Extensions_Selenium2PageObject::
+	 */
+	public function load($url = null) {
+		if (!empty($url)) {
+			$this->url = $url;
+		}
+		$this->test->url($this->url);
+
 		$this->assertPreConditions();
+		$this->assertPageTitle();
 		$this->assertMapConditions();
+
+		return $this;
+	}
+
+	/**
+	 * Assert the page title
+	 *
+	 * @return $this
+	 */
+	public function assertPageTitle() {
+		$this->test->assertEquals($this->pageTitle, $this->test->title());
+
+		return $this;
 	}
 
 	/**
@@ -69,6 +112,10 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	{
 	}
 
+	/**
+	 * @param $name
+	 * @return PHPUnit_Extensions_Selenium2TestCase_Element
+	 */
 	public function byMap($name)
 	{
 		return $this->test->byCssSelector($this->getLocator($name));
@@ -104,8 +151,8 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * map locator.
 	 *
 	 * @return mixed
+	 * @toto Add missing return, update @return
 	 */
-
 	public function __call($name, $arguments)
 	{
 		// Apply function to each element
@@ -125,6 +172,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 			$element = $this->byMap($arguments[0]);
 			if ($name == 'select') {
 				$element = $this->test->select($element);
+				$name = 'selectOption';
 			}
 			array_shift($arguments);
 			return call_user_func_array(array($element, $name), $arguments);

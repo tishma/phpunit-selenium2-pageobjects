@@ -9,7 +9,7 @@
   </php>
 
   <testsuites>
-    <testsuite name="PHPUnit-SeleniumPageObject">
+    <testsuite name="PHPUnit Selenium2 PageObjects">
       <directory suffix="Test.php">Tests</directory>
     </testsuite>
   </testsuites>

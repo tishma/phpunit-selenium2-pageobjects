@@ -1,7 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../src/Extensions/Selenium2PageObject.php';
-require_once __DIR__ . '/../src/Extensions/Selenium2PageObject/Model.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class MockPageObjectModel extends PHPUnit_Extensions_Selenium2PageObject_Model
 {
@@ -65,6 +64,9 @@ class MockPageObject extends PHPUnit_Extensions_Selenium2PageObject
 
 }
 
+/**
+ * Mock object with getter and setter
+ */
 class MockGetterSetter
 {
 	public $userCount;
@@ -85,14 +87,15 @@ class MockSelenium2TestCase extends PHPUnit_Extensions_Selenium2TestCase
 	public $elements = array();
 	public $elementsChecked = array();
 
-	public function byCssSelector($selector) {
+	public function byCssSelector($selector)
+	{
 		$this->elementsChecked[] = $selector;
 		if (in_array($selector, $this->elements)) {
 			$seleniumServerUrl = PHPUnit_Extensions_Selenium2TestCase_URL::fromHostAndPort('www.dummy.com', 80);
 			$driver = new PHPUnit_Extensions_Selenium2TestCase_Driver($seleniumServerUrl);
 			return new PHPUnit_Extensions_Selenium2TestCase_Element($driver, $seleniumServerUrl);
 		} else {
-			throw new PHPUnit_Framework_ExpectationFailedException('Element with CSS selector '.$selector.' does not exist');
+			throw new PHPUnit_Framework_ExpectationFailedException('Element with CSS selector ' . $selector . ' does not exist');
 		}
 	}
 }

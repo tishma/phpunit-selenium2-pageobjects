@@ -14,6 +14,8 @@ class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 	}
 
 	/**
+	 * Test submitting data to the home page (index)
+	 *
 	 * @dataProvider dataPeople
 	 */
 	public function testSubmit(PersonModel $person)

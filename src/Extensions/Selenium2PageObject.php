@@ -28,17 +28,8 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	public function __construct(PHPUnit_Extensions_Selenium2TestCase $test)
 	{
 		$this->test = $test;
-		$this->configureMappings();
 		$this->assertPreConditions();
 		$this->assertMapConditions();
-	}
-
-	/**
-	 * Configure mappings
-	 */
-	protected function configureMappings()
-	{
-		// Placeholder
 	}
 
 	/**

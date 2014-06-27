@@ -23,11 +23,14 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	protected $test;
 
 	/**
+	 * The key to UI locator map
+	 *
 	 * A mapping of unique keys to locator strings. Each one of these is
 	 * validated to ensure it exists on the page when the PageObject is
 	 * instantiated.
 	 *
 	 * @var array
+	 * @see PHPUnit_Extensions_Selenium2PageObject::assertMapConditions()
 	 */
 	protected $map = array();
 

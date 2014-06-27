@@ -29,6 +29,11 @@ class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 		$view->assertEqualsModel($person);
 	}
 
+	/**
+	 * Data provider with people models
+	 *
+	 * @return array Person models
+	 */
 	public function dataPeople()
 	{
 		$r = array();

@@ -68,6 +68,10 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 		$m = new MockPageObject($se);
 		$m->map['map_key'] = 'map_value';
 
+		$this->markTestIncomplete(
+			'This test needs to be rewritten for Selenium2TestCase.'
+		);
+
 		try {
 				$m->clickByMap('map_key');
 		} catch (Exception $e) {

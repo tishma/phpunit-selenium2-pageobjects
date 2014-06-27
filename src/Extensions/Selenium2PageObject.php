@@ -23,7 +23,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * Instantiate the PageObject and validate that the browser in a valid
 	 * state for this PageObject.
 	 *
-	 * @param PHPUnit_Extensions_SeleniumTestCase $driver
+	 * @param PHPUnit_Extensions_Selenium2TestCase $test
 	 */
 	public function __construct(PHPUnit_Extensions_Selenium2TestCase $test)
 	{

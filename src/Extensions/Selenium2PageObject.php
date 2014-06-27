@@ -60,7 +60,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	}
 
 	/**
-	 * Convert a *(Each/All)ByMap call to using the real locator string as stored in
+	 * Convert a *(Each)ByMap call to using the real locator string as stored in
 	 * $this->map
 	 *
 	 * @example
@@ -103,12 +103,6 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 				}
 				return call_user_func_array(array($element, $name), $arguments);
 			}
-		// Apply function to all elements
-		// For using functions on entire collection of elements, e.g. count()
-		} else if (substr($name, -8) == 'AllByMap') {
-			$name = substr($name, 0, -8);
-			$elements = $this->elements($this->using('css selector')->value($this->getLocator($arguments[0])));
-			return call_user_func($name, $elements);
 		// Apply function to individual element
 		} else if (substr($name, -5) == 'ByMap') {
 			//trim off the ByMap

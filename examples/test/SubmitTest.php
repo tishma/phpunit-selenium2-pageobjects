@@ -20,7 +20,7 @@ class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 	 */
 	public function testSubmit(PersonModel $person)
 	{
-		$this->open('/');
+		$this->url('/');
 		
 		$home = new HomePage($this);
 		$home->setFromModel($person);

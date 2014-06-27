@@ -45,12 +45,13 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	}
 
 	/**
+	 * Callback method before asserting the map
+	 *
 	 * You may want to assert a page's header or title. If all you are testing
 	 * is that a field is present on the page, add the locator to the $map.
 	 */
 	protected function assertPreConditions()
 	{
-		// Placeholder
 	}
 
 	public function byMap($name)

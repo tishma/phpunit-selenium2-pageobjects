@@ -12,8 +12,17 @@
  * @package PHPUnit_Selenium2_PageObjects\Examples
  */
 
+/**
+ * Class HomePage
+ */
 class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 {
+
+	/**
+	 * The element map
+	 *
+	 * @var array
+	 */
 	protected $map = array(
 		'header' => '#title',
 		'real_name' => '#your_name',
@@ -21,13 +30,29 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 		'save' => '#form_submit'
 		);
 
+	/**
+	 * Elements to skip
+	 *
+	 * @var array
+	 */
 	protected $modelSkip = array('gender', 'save', 'header');
 
+	/**
+	 * Assert pre conditions callback
+	 *
+	 * @return void
+	 */
 	public function assertPreConditions()
 	{
 		$this->test->assertEquals('Example!', $this->textByMap('header'));
 	}
 
+	/**
+	 * Set data from model
+	 *
+	 * @param object $object Model
+	 * @return self
+	 */
 	public function setFromModel($object)
 	{
 		parent::setFromModel($object);
@@ -35,27 +60,51 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 		// Since `gender` on the model maps to an integer, override and set
 		// by the gender string.
 		$this->setGender($object->getGenderString());
+
+		return $this;
 	}
 
+	/**
+	 * Set the real name
+	 *
+	 * @param string $value The real name.
+	 * @return self
+	 */
 	public function setRealName($value)
 	{
 		//$this->valueByMap('real_name', $value);
 		$element = $this->byMap('real_name');
 		$element->value($value);
+
+		return $this;
 	}
 
+	/**
+	 * Set gender
+	 *
+	 * @param int $gender
+	 * @return self
+	 */
 	public function setGender($gender)
 	{
 		//$this->selectByMap('gender', 'label=' . $gender);
-		$genderselect = $this->byMap('gender');
-		$genderselect = $this->select($genderselect);
-		$genderselect->selectOptionByLabel($gender);
+		$genderSelect = $this->byMap('gender');
+		$genderSelect = $this->select($genderSelect);
+		$genderSelect->selectOptionByLabel($gender);
+
+		return $this;
 	}
 
+	/**
+	 * Click save and return the view page object
+	 *
+	 * @return ViewPage The view page object
+	 */
 	public function save()
 	{
 		$this->clickByMap('save');
 		
 		return new ViewPage($this->test);
 	}
+
 }

@@ -12,6 +12,9 @@
  * @package PHPUnit_Selenium2_PageObjects\Source
  */
 
+/**
+ * Class PHPUnit_Extensions_Selenium2PageObject
+ */
 abstract class PHPUnit_Extensions_Selenium2PageObject
 {
 	/**

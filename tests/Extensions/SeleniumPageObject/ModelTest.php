@@ -12,6 +12,9 @@
  * @package PHPUnit_Selenium2_PageObjects\Tests
  */
 
+/**
+ * Class Selenium2PageObject_ModelTest
+ */
 class Selenium2PageObject_ModelTest extends PHPUnit_Framework_TestCase
 {
 

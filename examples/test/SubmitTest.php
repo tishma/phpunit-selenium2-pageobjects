@@ -17,8 +17,14 @@ require_once 'HomePage.php';
 require_once 'ViewPage.php';
 require_once __DIR__ . '/../PersonModel.php';
 
+/**
+ * Class SubmitTest
+ */
 class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 {
+	/**
+	 * Setup
+	 */
 	public function setUp()
 	{
 		// Change the URL according to your setup
@@ -68,4 +74,5 @@ class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 
 		return $r;
 	}
+
 }

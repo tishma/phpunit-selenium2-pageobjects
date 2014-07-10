@@ -12,22 +12,39 @@
  * @package PHPUnit_Selenium2_PageObjects\Examples
  */
 
+/**
+ * Class ViewPage
+ */
 class ViewPage extends PHPUnit_Extensions_Selenium2PageObject_Model
 {
-
+	/**
+	 * @var array
+	 */
 	protected $map = array(
 		'header' => '//h1[@id="title"]',
 		'real_name' => '#output_your_name',
 		'gender' => '#output_your_gender'
 	);
 
+	/**
+	 * @var array
+	 */
 	protected $modelSkip = array('gender', 'header');
 
+	/**
+	 * Assert pre conditions callback
+	 */
 	public function assertPreConditions()
 	{
 		$this->test->assertEquals('Viewing your data', $this->textByMap('header'));
 	}
 
+	/**
+	 * Assert Equals model
+	 *
+	 * @param object $object
+	 * @param string $message
+	 */
 	public function assertEqualsModel($object, $message = '')
 	{
 		parent::assertEqualsModel($object, $message);
@@ -38,6 +55,11 @@ class ViewPage extends PHPUnit_Extensions_Selenium2PageObject_Model
 		);
 	}
 
+	/**
+	 * Gets the real name
+	 *
+	 * @return mixed
+	 */
 	public function getRealName()
 	{
 		return $this->textByMap('real_name');

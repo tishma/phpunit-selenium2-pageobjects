@@ -15,7 +15,7 @@
 /**
  * Class HomePage
  */
-class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
+class HomePage extends PHPUnit_Extensions_Selenium2PageObject
 {
 
 	/**
@@ -28,14 +28,20 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 		'real_name' => '#your_name',
 		'gender' => '#gender',
 		'save' => '#form_submit'
-		);
+	);
 
 	/**
-	 * Elements to skip
+	 * Set person data
 	 *
-	 * @var array
+	 * @param PersonModel $person
 	 */
-	protected $modelSkip = array('gender', 'save', 'header');
+	public function setPerson(PersonModel $person)
+	{
+		$gender = $person->getGenderString();
+		$this->setGender($gender);
+		$name = $person->getRealName();
+		$this->setRealName($name);
+	}
 
 	/**
 	 * Assert pre conditions callback
@@ -48,23 +54,6 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 	}
 
 	/**
-	 * Set data from model
-	 *
-	 * @param object $object Model
-	 * @return self
-	 */
-	public function setFromModel($object)
-	{
-		parent::setFromModel($object);
-
-		// Since `gender` on the model maps to an integer, override and set
-		// by the gender string.
-		$this->setGender($object->getGenderString());
-
-		return $this;
-	}
-
-	/**
 	 * Set the real name
 	 *
 	 * @param string $value The real name.
@@ -72,7 +61,6 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 	 */
 	public function setRealName($value)
 	{
-		//$this->valueByMap('real_name', $value);
 		$element = $this->byMap('real_name');
 		$element->value($value);
 
@@ -87,7 +75,6 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 	 */
 	public function setGender($gender)
 	{
-		//$this->selectByMap('gender', 'label=' . $gender);
 		$genderSelect = $this->byMap('gender');
 		$genderSelect = $this->select($genderSelect);
 		$genderSelect->selectOptionByLabel($gender);
@@ -102,7 +89,7 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject_Model
 	 */
 	public function save()
 	{
-		$this->clickByMap('save');
+		$this->byMap('save')->click();
 		
 		return new ViewPage($this->test);
 	}

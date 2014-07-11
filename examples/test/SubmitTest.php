@@ -13,8 +13,8 @@
  */
 
 require_once '../../vendor/autoload.php';
-require_once 'HomePage.php';
-require_once 'ViewPage.php';
+require_once __DIR__ . '/Pages/HomePage.php';
+require_once __DIR__ . '/Pages/ViewPage.php';
 require_once __DIR__ . '/../PersonModel.php';
 
 /**
@@ -42,14 +42,14 @@ class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 		$this->url('/');
 		
 		$home = new HomePage($this);
-		$home->setFromModel($person);
+		$home->setPerson($person);
 		$view = $home->save();
 
-		$view->assertEqualsModel($person);
+		// TODO Assert person is same on view page
 	}
 
 	/**
-	 * Data provider with people models
+	 * Data provider with Person models
 	 *
 	 * @return array Person models
 	 */

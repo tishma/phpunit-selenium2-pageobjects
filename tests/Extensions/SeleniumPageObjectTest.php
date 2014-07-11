@@ -19,7 +19,6 @@
  */
 class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 {
-
 	/**
 	 * The mocked Selenium2TestCase
 	 *
@@ -32,144 +31,245 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @var PHPUnit_Extensions_Selenium2PageObject
 	 */
-	protected $pageObject;
+	protected $page;
 
 	/**
 	 * Prepare a Selenium2TestCase and Selenium2PageObjectmock
+	 *
+	 * @return void
 	 */
 	protected function setUp() {
 		parent::setUp();
 
-		$this->test = $this->getMock('PHPUnit_Framework_TestCase');
 		$this->test = $this->getMock(
-			'PHPUnit_Extensions_Selenium2PageObject',
-			array(),
+			'PHPUnit_Extensions_Selenium2TestCase'
+		);
+	}
+
+	/**
+	 * Tests whether load calls the callbacks
+	 *
+	 * @covers ::load
+	 * @return void
+	 */
+	public function testLoadCallsCallbacks()
+	{
+		$this->page = $this->getMock(
+			'MockPage',
+			array('_assertPreConditions', 'assertPageTitle', '_assertMapConditions'),
 			array($this->test)
 		);
 
+		$this->page->expects($this->once())
+			->method('_assertPreConditions');
+		$this->page->expects($this->once())
+			->method('assertPageTitle');
+		$this->page->expects($this->once())
+			->method('_assertMapConditions');
+
+		$this->page->load();
 	}
 
 	/**
-	 * Tests the constructor
+	 * Tests whether load calls url with the default URL
 	 *
-	 * @covers ::__construct
+	 * @covers ::load
+	 * @return void
 	 */
-	public function testConstructorCallsMapAndPreConditions()
+	public function testLoadCallsUrlWithDefault()
 	{
-		$se = new MockSelenium2TestCase();
+		$expectedUrl = 'foo123.html';
 
-		$page = new MockPageObject($se);
-
-		$this->assertTrue($page->preConditionsCalled,
-			'assertPreConditions should be called when instantiated.');
-	}
-
-	/**
-	 * Tests the assertMapConditions method
-	 *
-	 * @covers ::assertMapConditions
-	 */
-	public function testAssertMapConditionsChecksEachMapElement()
-	{
-		$se = new MockSelenium2TestCase();
-		$se->elements[] = 'map_value';
-		$se->elements[] = 'map_value2';
-
-		$m = new MockPageObject($se);
-		$m->map['map_key'] = 'map_value';
-		$m->map['map_key2'] = 'map_value2';
-		$m->assertMapConditions();
-
-		$this->assertEquals(
-			array('map_value', 'map_value2'),
-			$se->elementsChecked,
-			'Each map value passed should have been checked');
-	}
-
-	/**
-	 * Tests the assertMapConditions with a map element missing
-	 *
-	 * @expectedException PHPUnit_Framework_ExpectationFailedException
-	 * @covers ::assertMapConditions
-	 */
-	public function testAssertMissingMapElementFails()
-	{
-		$se = new MockSelenium2TestCase();
-		$se->elements[] = 'map_value';
-
-		$m = new MockPageObject($se);
-		$m->map['map_key'] = 'map_value';
-		$m->map['map_key2'] = 'map_value2';
-
-		$m->assertMapConditions();
-	}
-
-	/**
-	 * Tests the __call interceptor method
-	 *
-	 * @covers ::__call
-	 * @todo Rewrite for Selenium2TestCase
-	 */
-	public function testCallsMadeByMapGetIntercepted()
-	{
-		$se = new MockSelenium2TestCase();
-		$se->elements[] = 'map_value';
-
-		$m = new MockPageObject($se);
-		$m->map['map_key'] = 'map_value';
-
-		$this->markTestIncomplete(
-			'This test needs to be rewritten for Selenium2TestCase.'
+		$this->test = $this->getMock(
+			'PHPUnit_Extensions_Selenium2TestCase',
+			array('url')
+		);
+		$this->page = $this->getMock(
+			'MockPage',
+			array('_assertPreConditions', 'assertPageTitle', '_assertMapConditions'),
+			array($this->test)
 		);
 
-		try {
-				$m->clickByMap('map_key');
-		} catch (Exception $e) {
-				$this->fail("Unable to 'click' on element");
-		}
+		$this->test->expects($this->once())
+			->method('url')
+			->with($this->equalTo($expectedUrl));
 
-		$this->assertEquals(
-			array('map_value'),
-			$se->elementsChecked,
-			'the __call method should translate the map key into the map value');
+		$this->page->load();
 	}
 
 	/**
-	 * Tests the __call method without ByMap pass through
+	 * Tests whether load calls url with the URL given
 	 *
-	 * @covers ::__call
+	 * @covers ::load
+	 * @return void
 	 */
-	public function testCallsMadeWithoutByMapPassThrough()
+	public function testLoadCallsUrlWithUrlGiven()
 	{
-		$se = new MockSelenium2TestCase();
-		$se->elements[] = 'map_value';
+		$url = 'foo.html';
 
-		$m = new MockPageObject($se);
-		$m->map['map_key'] = 'map_value';
+		$this->test = $this->getMock(
+			'PHPUnit_Extensions_Selenium2TestCase',
+			array('url')
+		);
+		$this->page = $this->getMock(
+			'MockPage',
+			array('_assertPreConditions', 'assertPageTitle', '_assertMapConditions'),
+			array($this->test)
+		);
 
-		$this->assertNotNull($m->ByCssSelector('map_value'));
+		$this->test->expects($this->once())
+			->method('url')
+			->with($this->equalTo($url));
 
-		$this->assertEquals(
-			array('map_value'),
-			$se->elementsChecked,
-			'the __call method should translate the map key into the map value');
+		$this->page->load($url);
+	}
+
+	/**
+	 * Tests whether load return value equals the page object
+	 *
+	 * @covers ::load
+	 * @return void
+	 */
+	public function testLoadReturnsThis()
+	{
+		$this->page = $this->getMock(
+			'MockPage',
+			array('_assertPreConditions', 'assertPageTitle', '_assertMapConditions'),
+			array($this->test)
+		);
+
+		$returned = $this->page->load();
+		$this->assertInstanceOf('MockPage', $returned);
+	}
+
+	/**
+	 * Tests the method assertPageTitle
+	 *
+	 * @covers ::assertPageTitle
+	 * @return void
+	 */
+	public function testAssertPageTitle()
+	{
+		$this->test = $this->getMock(
+			'PHPUnit_Extensions_Selenium2TestCase',
+			array('title')
+		);
+		$this->page = $this->getMock(
+			'MockPage',
+			null,
+			array($this->test)
+		);
+
+		$this->test->expects($this->any())
+			->method('title')
+			->will($this->returnValue('Foo 123'));
+
+		$this->page->assertPageTitle();
+	}
+
+	/**
+	 * Tests whether assertPageTitle return value equals the page object
+	 *
+	 * @covers ::assertPageTitle
+	 * @return void
+	 */
+	public function testAssertPageTitleReturnsThis()
+	{
+		$this->test = $this->getMock(
+			'PHPUnit_Extensions_Selenium2TestCase',
+			array('title')
+		);
+		$this->page = $this->getMock(
+			'MockPage',
+			null,
+			array($this->test)
+		);
+
+		$this->test->expects($this->any())
+			->method('title')
+			->will($this->returnValue('Foo 123'));
+
+		$returned =	$this->page->assertPageTitle();
+		$this->assertInstanceOf('MockPage', $returned);
+	}
+
+	/**
+	 * Tests the _assertMapConditions method
+	 *
+	 * @covers ::_assertMapConditions
+	 * @return void
+	 */
+	public function test_assertMapConditions()
+	{
+		$this->test = $this->getMock(
+			'PHPUnit_Extensions_Selenium2TestCase',
+			array('url', 'byCssSelector')
+		);
+		$this->page = $this->getMock(
+			'MockPage',
+			array('_assertPreConditions', 'assertPageTitle'),
+			array($this->test)
+		);
+
+		$this->test->expects($this->exactly(3))
+			->method('byCssSelector')
+			->will($this->onConsecutiveCalls('not_null', 'not_null', 'not_null'));
+
+		$this->page->load();
+	}
+
+	/**
+	 * Tests the _assertMapConditions method with a locator missing
+	 *
+	 * @e3xpectedExeption
+	 * @covers ::_assertMapConditions
+	 * @return void
+	 */
+	public function test_assertMapConditionsMissingLocator()
+	{
+		$this->test = $this->getMock(
+			'PHPUnit_Extensions_Selenium2TestCase',
+			array('url', 'byCssSelector')
+		);
+		$this->page = $this->getMock(
+			'MockPage',
+			array('_assertPreConditions', 'assertPageTitle'),
+			array($this->test)
+		);
+
+		$this->markTestIncomplete(
+			'This test has not been implemented yet.'
+		);
+
+		$this->test->expects($this->exactly(3))
+			->method('byCssSelector')
+			->will($this->onConsecutiveCalls('not_null', 'not_null', null));
+
+		$this->page->load();
 	}
 
 	/**
 	 * Tests the getLocator method
 	 *
 	 * @covers ::getLocator
+	 * @return void
 	 */
 	public function testGetLocatorReturnsMapValue()
 	{
-		$se = new MockSelenium2TestCase();
-		$m = new MockPageObject($se);
-		$m->map['map_key'] = 'map_value';
+		$this->page = $this->getMock(
+			'MockPage',
+			null,
+			array($this->test)
+		);
+
+		$result = $this->page->getLocator('fieldTwo');
+		$expected = 'field_2';
 
 		$this->assertEquals(
-			'map_value',
-			$m->getLocator('map_key'),
-			'Retured map key should match exactly.');
+			$expected,
+			$result,
+			'Returned map key should match.'
+		);
 	}
 
 	/**
@@ -177,12 +277,31 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @expectedException InvalidArgumentException
 	 * @covers ::getLocator
+	 * @return void
 	 */
 	public function testGetLocatorFailsIfMissing()
 	{
-		$se = new MockSelenium2TestCase();
-		$m = new MockPageObject($se);
-		$m->getLocator('this-key-does-not-exist');
+		$this->page = $this->getMock(
+			'MockPage',
+			null,
+			array($this->test)
+		);
+
+		$this->page->getLocator('this-key-does-not-exist');
 	}
+
+}
+
+class MockPage extends PHPUnit_Extensions_Selenium2PageObject {
+
+	protected $url = 'foo123.html';
+
+	protected $pageTitle = 'Foo 123';
+
+	protected $map = array(
+		'fieldOne' => 'field_1',
+		'fieldTwo' => 'field_2',
+		'fieldThree' => 'field_3',
+	);
 
 }

@@ -15,7 +15,7 @@
 /**
  * Class ViewPage
  */
-class ViewPage extends PHPUnit_Extensions_Selenium2PageObject_Model
+class ViewPage extends PHPUnit_Extensions_Selenium2PageObject
 {
 	/**
 	 * @var array
@@ -27,32 +27,11 @@ class ViewPage extends PHPUnit_Extensions_Selenium2PageObject_Model
 	);
 
 	/**
-	 * @var array
-	 */
-	protected $modelSkip = array('gender', 'header');
-
-	/**
 	 * Assert pre conditions callback
 	 */
 	public function assertPreConditions()
 	{
-		$this->test->assertEquals('Viewing your data', $this->textByMap('header'));
-	}
-
-	/**
-	 * Assert Equals model
-	 *
-	 * @param object $object
-	 * @param string $message
-	 */
-	public function assertEqualsModel($object, $message = '')
-	{
-		parent::assertEqualsModel($object, $message);
-
-		$this->test->assertEquals(
-			$object->getGenderString(),
-			$this->textByMap('gender')
-		);
+		$this->test->assertEquals('Viewing your data', $this->byMap('header')->text());
 	}
 
 	/**
@@ -62,7 +41,7 @@ class ViewPage extends PHPUnit_Extensions_Selenium2PageObject_Model
 	 */
 	public function getRealName()
 	{
-		return $this->textByMap('real_name');
+		return $this->byMap('real_name')->text();
 	}
 
 }

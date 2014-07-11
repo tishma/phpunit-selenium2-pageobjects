@@ -18,7 +18,7 @@
 abstract class PHPUnit_Extensions_Selenium2PageObject
 {
 	/**
-	 * The testcase that is utilizing the page object.
+	 * The test case that is utilizing the page object.
 	 *
 	 * @var PHPUnit_Extensions_Selenium2TestCase
 	 */
@@ -48,7 +48,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * instantiated.
 	 *
 	 * @var array
-	 * @see PHPUnit_Extensions_Selenium2PageObject::assertMapConditions()
+	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertMapConditions()
 	 */
 	protected $map = array();
 
@@ -63,11 +63,13 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	}
 
 	/**
-	 * Load the page
+	 * Load the page and calls the callbacks
 	 *
 	 * @param null|string $url An optional URL to load.
-	 * @return $this
-	 * @see PHPUnit_Extensions_Selenium2PageObject::
+	 * @return self
+	 * @see PHPUnit_Extensions_Selenium2PageObject::assertPreConditions
+	 * @see PHPUnit_Extensions_Selenium2PageObject::assertPageTitle
+	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertMapConditions
 	 */
 	public function load($url = null) {
 		if (!empty($url)) {
@@ -75,9 +77,9 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 		}
 		$this->test->url($this->url);
 
-		$this->assertPreConditions();
+		$this->_assertPreConditions();
 		$this->assertPageTitle();
-		$this->assertMapConditions();
+		$this->_assertMapConditions();
 
 		return $this;
 	}
@@ -85,7 +87,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	/**
 	 * Assert the page title
 	 *
-	 * @return $this
+	 * @return self
 	 */
 	public function assertPageTitle() {
 		$this->test->assertEquals($this->pageTitle, $this->test->title());
@@ -95,8 +97,10 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 
 	/**
 	 * Assert that all elements in $this->map are present on the page
+	 *
+	 * @return self
 	 */
-	protected function assertMapConditions()
+	protected function _assertMapConditions()
 	{
 		foreach ($this->map as $field => $locator) {
 			$this->test->assertNotNull(
@@ -111,77 +115,20 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * You may want to assert a page's header or title. If all you are testing
 	 * is that a field is present on the page, add the locator to the $map.
 	 */
-	protected function assertPreConditions()
+	protected function _assertPreConditions()
 	{
 	}
 
 	/**
-	 * @param $name
+	 * Returns an element through locator by map
+	 *
+	 * @param string $name The locator
 	 * @return PHPUnit_Extensions_Selenium2TestCase_Element
+	 * @todo COver by a test
 	 */
 	public function byMap($name)
 	{
 		return $this->test->byCssSelector($this->getLocator($name));
-	}
-
-	/**
-	 * Convert a *(Each)ByMap call to using the real locator string as stored in
-	 * $this->map
-	 *
-	 * @example
-	 * // In the class definition
-	 * protected $map = array('title' => 'div#title')
-	 *
-	 * // In your PageObject
-	 * public function getTitle()
-	 * {
-	 *	 return $this->getTextByMap('title');
-	 * }
-	 *
-	 * // In your test
-	 * 	public function setUpPage() {
-	 * 		parent::setUpPage();
-	 * 		$this->loginPage = new LoginPageObject($this);
-	 * }
-	 *
-	 * public function testTitle() {
-	 * 		$this->url('http://www.example.com/login');
-	 * 		$this->loginPage->clickByMap('title');
-	 * }
-	 *
-	 * @param string $name Method name
-	 * @param array $arguments An array of arguments. The first one must be the
-	 * map locator.
-	 *
-	 * @return mixed
-	 * @toto Add missing return, update @return
-	 */
-	public function __call($name, $arguments)
-	{
-		// Apply function to each element
-		if (substr($name, -9) == 'EachByMap') {
-			$name = substr($name, 0, -9);
-			$elements = $this->elements($this->using('css selector')->value($this->getLocator($arguments[0])));
-			foreach ($elements as $element) {
-				if ($name == 'select') {
-					$element = $this->test->select($element);
-				}
-				return call_user_func_array(array($element, $name), $arguments);
-			}
-		// Apply function to individual element
-		} else if (substr($name, -5) == 'ByMap') {
-			//trim off the ByMap
-			$name = substr($name, 0, -5);
-			$element = $this->byMap($arguments[0]);
-			if ($name == 'select') {
-				$element = $this->test->select($element);
-				$name = 'selectOption';
-			}
-			array_shift($arguments);
-			return call_user_func_array(array($element, $name), $arguments);
-		} else {
-			return call_user_func_array(array($this->test, $name), $arguments);
-		}
 	}
 
 	/**
@@ -191,7 +138,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * @return string
 	 * @throws InvalidArgumentException If the $map does not exist.
 	 */
-	protected function getLocator($map)
+	public function getLocator($map)
 	{
 		if (isset($this->map[$map])) {
 			return $this->map[$map];
@@ -205,9 +152,13 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 *
 	 * @param string $mapping_name
 	 * @param string $mapping_target
+	 * @return self
+	 * @todo COver by a test
 	 */
 	protected function addMapping($mapping_name, $mapping_target) {
 		$this->map[$mapping_name] = $mapping_target;
+
+		return $this;
 	}
 
 }

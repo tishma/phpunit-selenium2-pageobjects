@@ -649,6 +649,31 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the _byMap method
+	 *
+	 * @covers ::_byMap
+	 * @return void
+	 */
+	public function testByMap()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePublicElementMethods',
+			null,
+			array($this->test)
+		);
+
+		$this->test->expects($this->once())
+			->method('byCssSelector')
+			->with($this->equalTo('field_2'))
+			->will($this->returnValue('element'));
+
+		$locator = $this->page->byMap('fieldTwo');
+		$expected = 'element';
+
+		$this->assertEquals($expected, $locator);
+	}
+
+	/**
 	 * Tests the _getLocator method
 	 *
 	 * @covers ::_getLocator
@@ -886,7 +911,7 @@ class ExamplePageAssertCustomPageTitle extends ExamplePage {
 class ExamplePagePublicElementMethods extends ExamplePage {
 
 	public function byMap($field) {
-		return $this->byMap($field);
+		return $this->_byMap($field);
 	}
 
 	public function getLocator($field) {

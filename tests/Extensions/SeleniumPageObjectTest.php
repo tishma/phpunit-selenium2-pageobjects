@@ -42,7 +42,8 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 		parent::setUp();
 
 		$this->test = $this->getMock(
-			'PHPUnit_Extensions_Selenium2TestCase'
+			'PHPUnit_Extensions_Selenium2TestCase',
+			array('url', 'title', 'byCssSelector')
 		);
 	}
 
@@ -80,10 +81,6 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	{
 		$expectedUrl = 'foo123.html';
 
-		$this->test = $this->getMock(
-			'PHPUnit_Extensions_Selenium2TestCase',
-			array('url')
-		);
 		$this->page = $this->getMock(
 			'MockPage',
 			array('_assertPreConditions', 'assertPageTitle', '_assertMapConditions'),
@@ -107,10 +104,6 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	{
 		$url = 'foo.html';
 
-		$this->test = $this->getMock(
-			'PHPUnit_Extensions_Selenium2TestCase',
-			array('url')
-		);
 		$this->page = $this->getMock(
 			'MockPage',
 			array('_assertPreConditions', 'assertPageTitle', '_assertMapConditions'),
@@ -150,10 +143,6 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testAssertPageTitle()
 	{
-		$this->test = $this->getMock(
-			'PHPUnit_Extensions_Selenium2TestCase',
-			array('title')
-		);
 		$this->page = $this->getMock(
 			'MockPage',
 			null,
@@ -175,10 +164,6 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testAssertPageTitleReturnsThis()
 	{
-		$this->test = $this->getMock(
-			'PHPUnit_Extensions_Selenium2TestCase',
-			array('title')
-		);
 		$this->page = $this->getMock(
 			'MockPage',
 			null,
@@ -201,10 +186,6 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_assertMapConditions()
 	{
-		$this->test = $this->getMock(
-			'PHPUnit_Extensions_Selenium2TestCase',
-			array('url', 'byCssSelector')
-		);
 		$this->page = $this->getMock(
 			'MockPage',
 			array('_assertPreConditions', 'assertPageTitle'),
@@ -227,10 +208,6 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test_assertMapConditionsMissingLocator()
 	{
-		$this->test = $this->getMock(
-			'PHPUnit_Extensions_Selenium2TestCase',
-			array('url', 'byCssSelector')
-		);
 		$this->page = $this->getMock(
 			'MockPage',
 			array('_assertPreConditions', 'assertPageTitle'),
@@ -292,6 +269,9 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 
 }
 
+/**
+ * Class MockPage
+ */
 class MockPage extends PHPUnit_Extensions_Selenium2PageObject {
 
 	protected $url = 'foo123.html';

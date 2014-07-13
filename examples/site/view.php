@@ -25,6 +25,7 @@ $p->setGender($gender);
 ?>
 <!DOCTYPE html>
 <html>
+<body>
 <h1 id="title">Viewing your data</h1>
 <table>
     <tr>
@@ -36,4 +37,5 @@ $p->setGender($gender);
         <td id="output_your_gender"><?php echo $p->getGenderString(); ?>
     </tr>
 </table>
+</body>
 </html>

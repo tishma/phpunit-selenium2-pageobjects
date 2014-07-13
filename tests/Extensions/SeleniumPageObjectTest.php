@@ -147,18 +147,22 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests whether load calls _assertIsLoaded
+	 * Tests the load method without parameter
 	 *
 	 * @covers ::load
 	 * @return void
 	 */
-	public function testLoadCallsAssertIsLoaded()
+	public function testLoadWithoutParameter()
 	{
 		$this->page = $this->getMock(
 			'ExamplePage',
 			array('_assertIsLoaded'),
 			array($this->test)
 		);
+
+		$this->test->expects($this->once())
+			->method('url')
+			->with($this->equalTo('foo123.html'));
 
 		$this->page->expects($this->once())
 			->method('_assertIsLoaded');
@@ -184,7 +188,31 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests whether load calls _assertIsLoaded
+	 * Tests load with URL passed
+	 *
+	 * @covers ::load
+	 * @return void
+	 */
+	public function testLoadWithUrl()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePresetNullUrl',
+			array('_assertIsLoaded'),
+			array($this->test)
+		);
+
+		$this->test->expects($this->once())
+			->method('url')
+			->with($this->equalTo('test_abc.html'));
+
+		$this->page->expects($this->once())
+			->method('_assertIsLoaded');
+
+		$this->page->load('test_abc.html');
+	}
+
+	/**
+	 * Tests whether load thrown an exception when a null URL is preset
 	 *
 	 * @expectedException UnexpectedValueException
 	 * @covers ::load

@@ -230,6 +230,142 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the _assertIsLoaded method
+	 *
+	 * @covers ::_assertIsLoaded
+	 * @return void
+	 */
+	public function testAssertIsLoaded()
+	{
+		$this->page = $this->getMock(
+			'ExamplePage',
+			array(
+				'_beforeOnLoadAssertions',
+				'_assertUrl',
+				'_assertPageTitle',
+				'_assertElementsPresent',
+				'_afterOnLoadAssertions'
+			),
+			array($this->test)
+		);
+
+		$this->page->expects($this->once())
+			->method('_beforeOnLoadAssertions');
+		$this->page->expects($this->once())
+			->method('_assertUrl');
+		$this->page->expects($this->once())
+			->method('_assertPageTitle');
+		$this->page->expects($this->once())
+			->method('_assertElementsPresent');
+		$this->page->expects($this->once())
+			->method('_afterOnLoadAssertions');
+
+		$this->page->load();
+	}
+
+	/**
+	 * Tests the _assertIsLoaded method when doNotCheckUrlOnLoad is enabled
+	 *
+	 * @covers ::_assertIsLoaded
+	 * @return void
+	 */
+	public function testAssertIsLoadedDoNotCheckUrlOnLoad()
+	{
+		$this->page = $this->getMock(
+			'ExamplePageDoNotCheckUrlOnLoad',
+			array(
+				'_beforeOnLoadAssertions',
+				'_assertUrl',
+				'_assertPageTitle',
+				'_assertElementsPresent',
+				'_afterOnLoadAssertions'
+			),
+			array($this->test)
+		);
+
+		$this->page->expects($this->once())
+			->method('_beforeOnLoadAssertions');
+		$this->page->expects($this->never())
+			->method('_assertUrl');
+		$this->page->expects($this->once())
+			->method('_assertPageTitle');
+		$this->page->expects($this->once())
+			->method('_assertElementsPresent');
+		$this->page->expects($this->once())
+			->method('_afterOnLoadAssertions');
+
+		$this->page->load();
+	}
+
+	/**
+	 * Tests the _assertIsLoaded method when doNotCheckPageTitleOnLoad is enabled
+	 *
+	 * @covers ::_assertIsLoaded
+	 * @return void
+	 */
+	public function testAssertIsLoadedDoNotCheckPageTitleOnLoad()
+	{
+		$this->page = $this->getMock(
+			'ExamplePageDoNotCheckPageTitleOnLoad',
+			array(
+				'_beforeOnLoadAssertions',
+				'_assertUrl',
+				'_assertPageTitle',
+				'_assertElementsPresent',
+				'_afterOnLoadAssertions'
+			),
+			array($this->test)
+		);
+
+		$this->page->expects($this->once())
+			->method('_beforeOnLoadAssertions');
+		$this->page->expects($this->once())
+			->method('_assertUrl');
+		$this->page->expects($this->never())
+			->method('_assertPageTitle');
+		$this->page->expects($this->once())
+			->method('_assertElementsPresent');
+		$this->page->expects($this->once())
+			->method('_afterOnLoadAssertions');
+
+		$this->page->load();
+	}
+
+	/**
+	 * Tests the _assertIsLoaded method when doNotCheckElementsOnLoad is enabled
+	 *
+	 * @covers ::_assertIsLoaded
+	 * @return void
+	 */
+	public function testAssertIsLoadedDoNotCheckElementsOnLoad()
+	{
+		$this->page = $this->getMock(
+			'ExamplePageDoNotCheckElementsOnLoad',
+			array(
+				'_beforeOnLoadAssertions',
+				'_assertUrl',
+				'_assertPageTitle',
+				'_assertElementsPresent',
+				'_afterOnLoadAssertions'
+			),
+			array($this->test)
+		);
+
+		$this->page->expects($this->once())
+			->method('_beforeOnLoadAssertions');
+		$this->page->expects($this->once())
+			->method('_assertUrl');
+		$this->page->expects($this->once())
+			->method('_assertPageTitle');
+		$this->page->expects($this->never())
+			->method('_assertElementsPresent');
+		$this->page->expects($this->once())
+			->method('_afterOnLoadAssertions');
+
+		$this->page->load();
+	}
+
+	/**
 	 * Tests whether load calls url with the default URL
 	 *
 	 * @covers ::load
@@ -428,7 +564,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 }
 
 /**
- * Class MockPage
+ * Example page with the mandatory fields set
  */
 class ExamplePage extends PHPUnit_Extensions_Selenium2PageObject {
 
@@ -445,7 +581,7 @@ class ExamplePage extends PHPUnit_Extensions_Selenium2PageObject {
 }
 
 /**
- * Class MockPage
+ * Page with $loadOnConstruct enabled
  */
 class ExamplePageLoadOnConstruct extends ExamplePage {
 
@@ -454,7 +590,7 @@ class ExamplePageLoadOnConstruct extends ExamplePage {
 }
 
 /**
- * Class MockPage
+ * Page with $checkIsLoadedOnConstruct enabled
  */
 class ExamplePageCheckIsLoadedOnConstruct extends ExamplePage {
 
@@ -468,5 +604,32 @@ class ExamplePageCheckIsLoadedOnConstruct extends ExamplePage {
 class ExamplePagePresetNullUrl extends ExamplePage {
 
 	protected $url = null;
+
+}
+
+/**
+ * Page with $doNotCheckUrlOnLoad enabled
+ */
+class ExamplePageDoNotCheckUrlOnLoad extends ExamplePage {
+
+	protected $doNotCheckUrlOnLoad = true;
+
+}
+
+/**
+ * Page with $doNotCheckPageTitleOnLoad enabled
+ */
+class ExamplePageDoNotCheckPageTitleOnLoad extends ExamplePage {
+
+	protected $doNotCheckPageTitleOnLoad = true;
+
+}
+
+/**
+ * Page with $doNotCheckElementsOnLoad enabled
+ */
+class ExamplePageDoNotCheckElementsOnLoad extends ExamplePage {
+
+	protected $doNotCheckElementsOnLoad = true;
 
 }

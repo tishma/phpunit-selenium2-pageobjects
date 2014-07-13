@@ -243,6 +243,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * @todo Cover absolute URL.
 	 * @todo Cover relative URL.
 	 * @todo Cover base with beginning and relative URL with trailing slash.
+	 * @todo What if there is no absolute URl and no base URl set?
 	 */
 	protected function _assertUrl($url = null) {
 		if ($url) {

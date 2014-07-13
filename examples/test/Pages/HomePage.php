@@ -17,6 +17,14 @@
  */
 class HomePage extends PHPUnit_Extensions_Selenium2PageObject
 {
+	/**
+	 * The URL
+	 *
+	 * Must be set per page individually.
+	 *
+	 * @var string
+	 */
+	protected $url = '/';
 
 	/**
 	 * The element map
@@ -44,13 +52,13 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject
 	}
 
 	/**
-	 * Assert pre conditions callback
+	 * A callback method AFTER the on load assertions
 	 *
 	 * @return void
 	 */
-	public function assertPreConditions()
+	public function _afterOnLoadAssertions()
 	{
-		$this->test->assertEquals('Example!', $this->textByMap('header'));
+		$this->test->assertEquals('Example!', $this->_byMap('header')->text());
 	}
 
 	/**
@@ -76,7 +84,7 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject
 	public function setGender($gender)
 	{
 		$genderSelect = $this->_byMap('gender');
-		$genderSelect = $this->select($genderSelect);
+		$genderSelect = $this->test->select($genderSelect);
 		$genderSelect->selectOptionByLabel($gender);
 
 		return $this;

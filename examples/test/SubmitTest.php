@@ -12,7 +12,7 @@
  * @package PHPUnit_Selenium2_PageObjects\Examples
  */
 
-require_once '../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/Pages/HomePage.php';
 require_once __DIR__ . '/Pages/ViewPage.php';
 require_once __DIR__ . '/../PersonModel.php';
@@ -39,9 +39,8 @@ class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 	 */
 	public function testSubmit(PersonModel $person)
 	{
-		$this->url('/');
-		
 		$home = new HomePage($this);
+		$home->load();
 		$home->setPerson($person);
 		$view = $home->save();
 

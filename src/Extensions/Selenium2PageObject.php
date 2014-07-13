@@ -47,8 +47,9 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	/**
 	 * The page URL
 	 *
+	 * Must be set per page individually.
 	 * Should be a relative URL preferably.
-	 * Set the base URL in the test(s).
+	 * Set the base URL in your test(s).
 	 *
 	 * @var string
 	 * @see PHPUnit_Extensions_Selenium2TestCase::setBrowserUrl
@@ -139,14 +140,23 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 *
 	 * @param null|string $url An optional URL to load.
 	 * @return self
+	 * @throws UnexpectedValueException If the page URL was not set.
 	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertPreConditions
 	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertPageTitle
 	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertPageTitle
+	 * @todo Cover UnexpectedValueException
+	 * @todo Cover default URL
+	 * @todo Cover specific URL
 	 */
 	public function load($url = null) {
 		if (!empty($url)) {
 			$this->url = $url;
 		}
+
+		if (empty($this->url)) {
+			throw new UnexpectedValueException('Page URL was not set.');
+		}
+
 		$this->test->url($this->url);
 
 		$this->_beforeOnLoadAssertions();
@@ -158,7 +168,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 			$this->_assertPageTitle();
 		}
 		if (!$this->doNotCheckElementsOnLoad) {
-			$this->_assertElementsPresent(null, $this->excludeElementsCheckOnLoad);
+			$this->_assertElementsPresent($this->map, $this->excludeElementsCheckOnLoad);
 		}
 
 		$this->_afterOnLoadAssertions();
@@ -189,12 +199,28 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 *
 	 * @param null|string $url An optional URL to assert.
 	 * @return void
+	 * @todo Cover absolute URL.
+	 * @todo Cover relative URL.
+	 * @todo Cover base with beginning and relative URL with trailing slash.
 	 */
 	protected function _assertUrl($url = null) {
 		if ($url) {
 			$this->url = $url;
 		}
-		$this->test->assertEquals($this->url, $this->test->url());
+
+		// Treat set url as absolute URL, if it begins with "http:" or "https:"
+		if (strpos($this->url, 'http:') === 0 || strpos($this->url, 'https:') === 0) {
+			$fullUrl = $this->url;
+		} else {
+			// Remove trailing slash(es) from base URL
+			$baseUrl = $this->test->getBrowserUrl();
+			$baseUrl = rtrim($baseUrl, '/');
+			// Remove leading slash(es) from relative URL
+			$relUrl = ltrim($this->url, '/');
+			// Build full URL with one slash in between
+			$fullUrl = sprintf('%s/%s', $baseUrl, $relUrl);
+		}
+		$this->test->assertEquals($fullUrl, $this->test->url());
 	}
 
 	/**
@@ -217,7 +243,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * @param array $excludeElements An optoinal list of field names to exclude.
 	 * @return void
 	 */
-	protected function _assertElementsPresent($elements, $excludeElements = null)
+	protected function _assertElementsPresent($elements, $excludeElements = array())
 	{
 		// Exclude elements from elements map to check
 		foreach ($excludeElements as $excludeField) {

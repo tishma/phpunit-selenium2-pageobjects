@@ -669,7 +669,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests the _getLocator method with nonexistant locator
+	 * Tests the _getLocator method with nonexistent locator
 	 *
 	 * @expectedException InvalidArgumentException
 	 * @covers ::_getLocator
@@ -689,6 +689,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the _addElement method with null field
 	 *
+	 * @expectedException InvalidArgumentException
 	 * @covers ::_addElement
 	 * @return void
 	 */
@@ -701,21 +702,12 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 		);
 
 		$this->page->addElement(null, 'field_4');
-
-		$this->assertEquals(
-			array(
-				'fieldOne' => 'field_1',
-				'fieldTwo' => 'field_2',
-				'fieldThree' => 'field_3',
-				null => 'field_4',
-			),
-			PHPUnit_Framework_Assert::readAttribute($this->page, 'map')
-		);
 	}
 
 	/**
 	 * Tests the _addElement method with null locator
 	 *
+	 * @expectedException InvalidArgumentException
 	 * @covers ::_addElement
 	 * @return void
 	 */
@@ -728,16 +720,6 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 		);
 
 		$this->page->addElement('fieldFour', null);
-
-		$this->assertEquals(
-			array(
-				'fieldOne' => 'field_1',
-				'fieldTwo' => 'field_2',
-				'fieldThree' => 'field_3',
-				'fieldFour' => null,
-			),
-			PHPUnit_Framework_Assert::readAttribute($this->page, 'map')
-		);
 	}
 
 	/**
@@ -768,6 +750,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Tests the _removeElement method with nonexistent field
 	 *
+	 * @expectedException InvalidArgumentException
 	 * @covers ::_removeElement
 	 * @return void
 	 */
@@ -780,15 +763,6 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 		);
 
 		$this->page->removeElement('never_heard_of');
-
-		$this->assertEquals(
-			array(
-				'fieldOne' => 'field_1',
-				'fieldTwo' => 'field_2',
-				'fieldThree' => 'field_3',
-			),
-			PHPUnit_Framework_Assert::readAttribute($this->page, 'map')
-		);
 	}
 
 }

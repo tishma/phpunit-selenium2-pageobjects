@@ -333,9 +333,15 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * @param string $field The field field to map.
 	 * @param string $locator The HTML locator.
 	 * @return void
-	 * @todo Throw an exception if an empty or null field or locator is passed
+	 * @throws InvalidArgumentException If the field or locator is given empty.
 	 */
 	protected function _addElement($field, $locator) {
+		if (empty($field)) {
+			throw new InvalidArgumentException('Empty field given.');
+		}
+		if (empty($locator)) {
+			throw new InvalidArgumentException('Empty locator given.');
+		}
 		$this->map[$field] = $locator;
 	}
 
@@ -344,13 +350,14 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 *
 	 * @param string $field The mapped field field.
 	 * @return void
-	 * @todo Throw an exception if a nonexistent field is passed
+	 * @throws InvalidArgumentException If a nonexistent field is given.
 	 */
 	protected function _removeElement($field)
 	{
-		if (isset($this->map[$field])) {
-			unset($this->map[$field]);
+		if (!isset($this->map[$field])) {
+			throw new InvalidArgumentException('Map ' . $field . ' is not a valid locator field.');
 		}
+		unset($this->map[$field]);
 	}
 
 }

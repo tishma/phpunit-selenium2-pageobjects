@@ -280,7 +280,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * Assert that all elements in $this->map are present on the page
 	 *
 	 * @param array $elements A elements maps to assert.
-	 * @param array $excludeElements An optoinal list of field names to exclude.
+	 * @param array $excludeElements An optional list of field names to exclude.
 	 * @return void
 	 */
 	protected function _assertElementsPresent($elements, $excludeElements = array())

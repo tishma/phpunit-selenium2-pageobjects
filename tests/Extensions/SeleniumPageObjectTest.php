@@ -533,16 +533,16 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests the _assertMapConditions method
+	 * Tests the _assertElementsPresent method
 	 *
-	 * @covers ::_assertMapConditions
+	 * @covers ::_assertElementsPresent
 	 * @return void
 	 */
-	/*public function test_assertMapConditions()
+	public function testAssertElementsPresent()
 	{
 		$this->page = $this->getMock(
-			'MockPage',
-			array('_assertPreConditions', 'assertPageTitle'),
+			'ExamplePagePublicAssertElementsPresent',
+			null,
 			array($this->test)
 		);
 
@@ -550,76 +550,72 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			->method('byCssSelector')
 			->will($this->onConsecutiveCalls('not_null', 'not_null', 'not_null'));
 
-		$this->page->load();
-	}*/
+		$this->page->assertElementsPresentDefault();
+	}
 
 	/**
-	 * Tests the _assertMapConditions method with a locator missing
+	 * Tests the _assertElementsPresent method with custom elements
 	 *
-	 * @e3xpectedExeption
-	 * @covers ::_assertMapConditions
+	 * @covers ::_assertElementsPresent
 	 * @return void
 	 */
-	/*public function test_assertMapConditionsMissingLocator()
+	public function testAssertElementsPresentCustomElements()
 	{
 		$this->page = $this->getMock(
-			'MockPage',
-			array('_assertPreConditions', 'assertPageTitle'),
+			'ExamplePagePublicAssertElementsPresent',
+			null,
 			array($this->test)
 		);
 
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
+		$this->test->expects($this->exactly(2))
+			->method('byCssSelector')
+			->will($this->onConsecutiveCalls('not_null', 'not_null'));
+
+		$this->page->assertElementsPresentCustomElements();
+	}
+
+	/**
+	 * Tests the _assertElementsPresent method with elements to exclude
+	 *
+	 * @covers ::_assertElementsPresent
+	 * @return void
+	 */
+	public function testAssertElementsPresentExcludeElements()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePublicAssertElementsPresent',
+			null,
+			array($this->test)
+		);
+
+		$this->test->expects($this->exactly(2))
+			->method('byCssSelector')
+			->will($this->onConsecutiveCalls('not_null', 'not_null'));
+
+		$this->page->assertElementsPresentExcludeElements();
+	}
+
+	/**
+	 * Tests the _assertElementsPresent method with a field missing
+	 *
+	 * @expectedException PHPUnit_Framework_ExpectationFailedException
+	 * @covers ::_assertElementsPresent
+	 * @return void
+	 */
+	public function testAssertElementsPresentNonexistentElement()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePublicAssertElementsPresent',
+			null,
+			array($this->test)
 		);
 
 		$this->test->expects($this->exactly(3))
 			->method('byCssSelector')
 			->will($this->onConsecutiveCalls('not_null', 'not_null', null));
 
-		$this->page->load();
-	}*/
-
-	/**
-	 * Tests the getLocator method
-	 *
-	 * @covers ::getLocator
-	 * @return void
-	 */
-	/*public function testGetLocatorReturnsMapValue()
-	{
-		$this->page = $this->getMock(
-			'MockPage',
-			null,
-			array($this->test)
-		);
-
-		$result = $this->page->getLocator('fieldTwo');
-		$expected = 'field_2';
-
-		$this->assertEquals(
-			$expected,
-			$result,
-			'Returned map key should match.'
-		);
-	}*/
-
-	/**
-	 * Tests the getLocator method with a missing locator
-	 *
-	 * @expectedException InvalidArgumentException
-	 * @covers ::getLocator
-	 * @return void
-	 */
-	/*public function testGetLocatorFailsIfMissing()
-	{
-		$this->page = $this->getMock(
-			'MockPage',
-			null,
-			array($this->test)
-		);
-
-		$this->page->getLocator('this-key-does-not-exist');
-	}*/
+		$this->page->assertElementsPresentDefault();
+	}
 
 	/**
 	 * Tests the _addElement method
@@ -899,6 +895,29 @@ class ExamplePageAssertCustomPageTitle extends ExamplePage {
 
 	public function assertCustomPageTitle() {
 		$this->_assertPageTitle('Custom title');
+	}
+
+}
+
+/**
+ * Page with public assertElementsPresent calling methods
+ *
+ * This is done for testing only!
+ */
+class ExamplePagePublicAssertElementsPresent extends ExamplePage {
+
+	public function assertElementsPresentDefault() {
+		$this->_assertElementsPresent($this->map, $this->excludeElementsCheckOnLoad);
+	}
+
+	public function assertElementsPresentCustomElements() {
+		$this->_assertElementsPresent(
+			array('foo1' => 'bar1', 'foo2' => 'bar2')
+		);
+	}
+
+	public function assertElementsPresentExcludeElements() {
+		$this->_assertElementsPresent($this->map, array('fieldTwo'));
 	}
 
 }

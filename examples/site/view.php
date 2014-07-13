@@ -24,6 +24,9 @@ $p->setGender($gender);
 
 ?>
 <!DOCTYPE html>
+<head>
+	<title>View your data</title>
+</head>
 <html>
 <body>
 <h1 id="title">Viewing your data</h1>

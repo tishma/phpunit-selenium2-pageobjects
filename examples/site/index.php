@@ -13,6 +13,9 @@
 */
 ?>
 <!DOCTYPE html>
+<head>
+	<title>Enter your data</title>
+</head>
 <html>
 <body>
 <h1 id="title">Example!</h1>

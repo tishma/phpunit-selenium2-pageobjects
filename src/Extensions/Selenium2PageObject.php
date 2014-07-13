@@ -78,13 +78,13 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	protected $doNotCheckPageTitleOnLoad = false;
 
 	/**
-	 * The key to UI locator map
+	 * The field to UI locator map
 	 *
 	 * A mapping of unique keys to locator strings. Each one of these is
 	 * validated to ensure it exists on the page when the PageObject is
 	 * instantiated.
 	 *
-	 * The key can be any string.
+	 * The field can be any string.
 	 * The locator on the other hand must be a CSS selector compatible locator.
 	 * XPath is not supported, use the method byXPath instead.
 	 *
@@ -314,17 +314,17 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	/**
 	 * Get the locator string of a mapped field
 	 *
-	 * @param string $key The key to a locator
+	 * @param string $field The field to a locator
 	 * @return string The HTML locator.
-	 * @throws InvalidArgumentException If the $key does not exist.
+	 * @throws InvalidArgumentException If the $field does not exist.
 	 */
-	protected function _getLocator($key)
+	protected function _getLocator($field)
 	{
-		if (isset($this->map[$key])) {
-			return $this->map[$key];
+		if (isset($this->map[$field])) {
+			return $this->map[$field];
 		}
 
-		throw new InvalidArgumentException('Map ' . $key . ' is not a valid locator key.');
+		throw new InvalidArgumentException('Map ' . $field . ' is not a valid locator field.');
 	}
 
 	/**
@@ -333,6 +333,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * @param string $field The field field to map.
 	 * @param string $locator The HTML locator.
 	 * @return void
+	 * @todo Throw an exception if an empty or null field or locator is passed
 	 */
 	protected function _addElement($field, $locator) {
 		$this->map[$field] = $locator;
@@ -343,6 +344,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 *
 	 * @param string $field The mapped field field.
 	 * @return void
+	 * @todo Throw an exception if a nonexistent field is passed
 	 */
 	protected function _removeElement($field)
 	{

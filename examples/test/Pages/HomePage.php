@@ -61,7 +61,7 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject
 	 */
 	public function setRealName($value)
 	{
-		$element = $this->byMap('real_name');
+		$element = $this->_byMap('real_name');
 		$element->value($value);
 
 		return $this;
@@ -75,7 +75,7 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject
 	 */
 	public function setGender($gender)
 	{
-		$genderSelect = $this->byMap('gender');
+		$genderSelect = $this->_byMap('gender');
 		$genderSelect = $this->select($genderSelect);
 		$genderSelect->selectOptionByLabel($gender);
 
@@ -89,7 +89,7 @@ class HomePage extends PHPUnit_Extensions_Selenium2PageObject
 	 */
 	public function save()
 	{
-		$this->byMap('save')->click();
+		$this->_byMap('save')->click();
 		
 		return new ViewPage($this->test);
 	}

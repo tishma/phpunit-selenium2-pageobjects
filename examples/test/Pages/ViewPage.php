@@ -31,7 +31,7 @@ class ViewPage extends PHPUnit_Extensions_Selenium2PageObject
 	 */
 	public function assertPreConditions()
 	{
-		$this->test->assertEquals('Viewing your data', $this->byMap('header')->text());
+		$this->test->assertEquals('Viewing your data', $this->_byMap('header')->text());
 	}
 
 	/**
@@ -41,7 +41,7 @@ class ViewPage extends PHPUnit_Extensions_Selenium2PageObject
 	 */
 	public function getRealName()
 	{
-		return $this->byMap('real_name')->text();
+		return $this->_byMap('real_name')->text();
 	}
 
 }

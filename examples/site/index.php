@@ -12,6 +12,8 @@
 * @package PHPUnit_Selenium2_PageObjects\Examples
 */
 ?>
+<!DOCTYPE html>
+<html>
 <h1 id="title">Example!</h1>
 <form action="view.php" method="post">
     <p>
@@ -32,3 +34,4 @@
         <input id="form_submit" type="submit" name="submit" value="Save" />
     </p>
 </form>
+</html>

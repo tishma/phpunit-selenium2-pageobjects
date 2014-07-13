@@ -165,9 +165,6 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * @return self
 	 * @throws UnexpectedValueException If the page URL was not set.
 	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertIsLoaded
-	 * @todo Cover UnexpectedValueException
-	 * @todo Cover default URL
-	 * @todo Cover specific URL
 	 */
 	public function load($url = null) {
 		if (!empty($url)) {

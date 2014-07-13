@@ -48,25 +48,155 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests whether load calls the callbacks
+	 * Tests the constructor without additional parameters
+	 *
+	 * @covers ::__construct
+	 * @return void
+	 */
+	public function testConstructorWithoutAdditionalParameters() {
+		$this->page = new ExamplePage($this->test);
+
+		$this->assertEquals(
+			'foo123.html',
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'url')
+		);
+		$this->assertEquals(
+			'Foo 123',
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'pageTitle')
+		);
+		$this->assertEquals(
+			array(
+				'fieldOne' => 'field_1',
+				'fieldTwo' => 'field_2',
+				'fieldThree' => 'field_3',
+			),
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'map')
+		);
+	}
+
+	/**
+	 *
+	 * Tests the constructor with additional parameters
+	 *
+	 * @covers ::__construct
+	 * @return void
+	 */
+	public function testConstructorWithAdditionalParameters() {
+		$this->page = new ExamplePage(
+			$this->test,
+			'special_url',
+			'special title'
+		);
+
+		$this->assertEquals(
+			'special_url',
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'url')
+		);
+		$this->assertEquals(
+			'special title',
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'pageTitle')
+		);
+		$this->assertEquals(
+			array(
+				'fieldOne' => 'field_1',
+				'fieldTwo' => 'field_2',
+				'fieldThree' => 'field_3',
+			),
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'map')
+		);
+	}
+
+	/**
+	 * Tests the constructor when loadOnConstruct is enabled
+	 *
+	 * @covers ::__construct
+	 * @return void
+	 */
+	public function testConstructorLoadOnConstruct() {
+		$this->page = $this->getMockBuilder('ExamplePageLoadOnConstruct')
+			->disableOriginalConstructor()
+			->setMethods(array('load', '_assertIsLoaded'))
+			->getMock();
+
+		$this->page->expects($this->once())
+			->method('load');
+		$this->page->expects($this->never())
+			->method('_assertIsLoaded');
+
+		$this->page->__construct($this->test);
+	}
+
+	/**
+	 * Tests the constructor when checkIsLoadedOnConstruct is enabled
+	 *
+	 * @covers ::__construct
+	 * @return void
+	 */
+	public function testConstructorCheckIsLoadedOnConstruct() {
+		$this->page = $this->getMockBuilder('ExamplePageCheckIsLoadedOnConstruct')
+			->disableOriginalConstructor()
+			->setMethods(array('load', '_assertIsLoaded'))
+			->getMock();
+
+		$this->page->expects($this->never())
+			->method('load');
+		$this->page->expects($this->once())
+			->method('_assertIsLoaded');
+
+		$this->page->__construct($this->test);
+	}
+
+	/**
+	 * Tests whether load calls _assertIsLoaded
 	 *
 	 * @covers ::load
 	 * @return void
 	 */
-	public function testLoadCallsCallbacks()
+	public function testLoadCallsAssertIsLoaded()
 	{
 		$this->page = $this->getMock(
-			'MockPage',
-			array('_assertPreConditions', 'assertPageTitle', '_assertMapConditions'),
+			'ExamplePage',
+			array('_assertIsLoaded'),
 			array($this->test)
 		);
 
 		$this->page->expects($this->once())
-			->method('_assertPreConditions');
-		$this->page->expects($this->once())
-			->method('assertPageTitle');
-		$this->page->expects($this->once())
-			->method('_assertMapConditions');
+			->method('_assertIsLoaded');
+
+		$this->page->load();
+	}
+
+	/**
+	 * Tests whether load does not thrown an exception when providing a null URL
+	 *
+	 * @covers ::load
+	 * @return void
+	 */
+	public function testLoadWithNullUrl()
+	{
+		$this->page = $this->getMock(
+			'ExamplePage',
+			array('_assertIsLoaded'),
+			array($this->test)
+		);
+
+		$this->page->load(null);
+	}
+
+	/**
+	 * Tests whether load calls _assertIsLoaded
+	 *
+	 * @expectedException UnexpectedValueException
+	 * @covers ::load
+	 * @return void
+	 */
+	public function testLoadWithPresetNullUrl()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePresetNullUrl',
+			array('_assertIsLoaded'),
+			array($this->test)
+		);
 
 		$this->page->load();
 	}
@@ -77,7 +207,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 * @covers ::load
 	 * @return void
 	 */
-	public function testLoadCallsUrlWithDefault()
+	/*public function testLoadCallsUrlWithDefault()
 	{
 		$expectedUrl = 'foo123.html';
 
@@ -92,7 +222,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			->with($this->equalTo($expectedUrl));
 
 		$this->page->load();
-	}
+	}*/
 
 	/**
 	 * Tests whether load calls url with the URL given
@@ -100,7 +230,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 * @covers ::load
 	 * @return void
 	 */
-	public function testLoadCallsUrlWithUrlGiven()
+	/*public function testLoadCallsUrlWithUrlGiven()
 	{
 		$url = 'foo.html';
 
@@ -115,7 +245,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			->with($this->equalTo($url));
 
 		$this->page->load($url);
-	}
+	}*/
 
 	/**
 	 * Tests whether load return value equals the page object
@@ -123,7 +253,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 * @covers ::load
 	 * @return void
 	 */
-	public function testLoadReturnsThis()
+	/*public function testLoadReturnsThis()
 	{
 		$this->page = $this->getMock(
 			'MockPage',
@@ -133,7 +263,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 
 		$returned = $this->page->load();
 		$this->assertInstanceOf('MockPage', $returned);
-	}
+	}*/
 
 	/**
 	 * Tests the method assertPageTitle
@@ -141,7 +271,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 * @covers ::assertPageTitle
 	 * @return void
 	 */
-	public function testAssertPageTitle()
+	/*public function testAssertPageTitle()
 	{
 		$this->page = $this->getMock(
 			'MockPage',
@@ -154,7 +284,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			->will($this->returnValue('Foo 123'));
 
 		$this->page->assertPageTitle();
-	}
+	}*/
 
 	/**
 	 * Tests whether assertPageTitle return value equals the page object
@@ -162,7 +292,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 * @covers ::assertPageTitle
 	 * @return void
 	 */
-	public function testAssertPageTitleReturnsThis()
+	/*public function testAssertPageTitleReturnsThis()
 	{
 		$this->page = $this->getMock(
 			'MockPage',
@@ -176,7 +306,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 
 		$returned =	$this->page->assertPageTitle();
 		$this->assertInstanceOf('MockPage', $returned);
-	}
+	}*/
 
 	/**
 	 * Tests the _assertMapConditions method
@@ -184,7 +314,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 * @covers ::_assertMapConditions
 	 * @return void
 	 */
-	public function test_assertMapConditions()
+	/*public function test_assertMapConditions()
 	{
 		$this->page = $this->getMock(
 			'MockPage',
@@ -197,7 +327,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			->will($this->onConsecutiveCalls('not_null', 'not_null', 'not_null'));
 
 		$this->page->load();
-	}
+	}*/
 
 	/**
 	 * Tests the _assertMapConditions method with a locator missing
@@ -206,7 +336,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 * @covers ::_assertMapConditions
 	 * @return void
 	 */
-	public function test_assertMapConditionsMissingLocator()
+	/*public function test_assertMapConditionsMissingLocator()
 	{
 		$this->page = $this->getMock(
 			'MockPage',
@@ -223,7 +353,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			->will($this->onConsecutiveCalls('not_null', 'not_null', null));
 
 		$this->page->load();
-	}
+	}*/
 
 	/**
 	 * Tests the getLocator method
@@ -231,7 +361,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 * @covers ::getLocator
 	 * @return void
 	 */
-	public function testGetLocatorReturnsMapValue()
+	/*public function testGetLocatorReturnsMapValue()
 	{
 		$this->page = $this->getMock(
 			'MockPage',
@@ -247,7 +377,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			$result,
 			'Returned map key should match.'
 		);
-	}
+	}*/
 
 	/**
 	 * Tests the getLocator method with a missing locator
@@ -256,7 +386,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	 * @covers ::getLocator
 	 * @return void
 	 */
-	public function testGetLocatorFailsIfMissing()
+	/*public function testGetLocatorFailsIfMissing()
 	{
 		$this->page = $this->getMock(
 			'MockPage',
@@ -265,14 +395,14 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 		);
 
 		$this->page->getLocator('this-key-does-not-exist');
-	}
+	}*/
 
 }
 
 /**
  * Class MockPage
  */
-class MockPage extends PHPUnit_Extensions_Selenium2PageObject {
+class ExamplePage extends PHPUnit_Extensions_Selenium2PageObject {
 
 	protected $url = 'foo123.html';
 
@@ -283,5 +413,32 @@ class MockPage extends PHPUnit_Extensions_Selenium2PageObject {
 		'fieldTwo' => 'field_2',
 		'fieldThree' => 'field_3',
 	);
+
+}
+
+/**
+ * Class MockPage
+ */
+class ExamplePageLoadOnConstruct extends ExamplePage {
+
+	protected $loadOnConstruct = true;
+
+}
+
+/**
+ * Class MockPage
+ */
+class ExamplePageCheckIsLoadedOnConstruct extends ExamplePage {
+
+	protected $checkIsLoadedOnConstruct = true;
+
+}
+
+/**
+ * Class MockPage
+ */
+class ExamplePagePresetNullUrl extends ExamplePage {
+
+	protected $url = null;
 
 }

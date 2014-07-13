@@ -621,6 +621,176 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 		$this->page->getLocator('this-key-does-not-exist');
 	}*/
 
+	/**
+	 * Tests the _addElement method
+	 *
+	 * @covers ::_addElement
+	 * @return void
+	 */
+	public function testAddElement()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePublicElementMethods',
+			null,
+			array($this->test)
+		);
+
+		$this->page->addElement('fieldFour', 'field_4');
+
+		$this->assertEquals(
+			array(
+				'fieldOne' => 'field_1',
+				'fieldTwo' => 'field_2',
+				'fieldThree' => 'field_3',
+				'fieldFour' => 'field_4',
+			),
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'map')
+		);
+	}
+
+	/**
+	 * Tests the _getLocator method
+	 *
+	 * @covers ::_getLocator
+	 * @return void
+	 */
+	public function testGetLocator()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePublicElementMethods',
+			null,
+			array($this->test)
+		);
+
+		$locator = $this->page->getLocator('fieldTwo');
+		$expected = 'field_2';
+
+		$this->assertEquals($expected, $locator);
+	}
+
+	/**
+	 * Tests the _getLocator method with nonexistant locator
+	 *
+	 * @expectedException InvalidArgumentException
+	 * @covers ::_getLocator
+	 * @return void
+	 */
+	public function testGetLocatorNonexistentField()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePublicElementMethods',
+			null,
+			array($this->test)
+		);
+
+		$this->page->getLocator('does_not_exist');
+	}
+
+	/**
+	 * Tests the _addElement method with null field
+	 *
+	 * @covers ::_addElement
+	 * @return void
+	 */
+	public function testAddElementNullField()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePublicElementMethods',
+			null,
+			array($this->test)
+		);
+
+		$this->page->addElement(null, 'field_4');
+
+		$this->assertEquals(
+			array(
+				'fieldOne' => 'field_1',
+				'fieldTwo' => 'field_2',
+				'fieldThree' => 'field_3',
+				null => 'field_4',
+			),
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'map')
+		);
+	}
+
+	/**
+	 * Tests the _addElement method with null locator
+	 *
+	 * @covers ::_addElement
+	 * @return void
+	 */
+	public function testAddElementNullLocator()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePublicElementMethods',
+			null,
+			array($this->test)
+		);
+
+		$this->page->addElement('fieldFour', null);
+
+		$this->assertEquals(
+			array(
+				'fieldOne' => 'field_1',
+				'fieldTwo' => 'field_2',
+				'fieldThree' => 'field_3',
+				'fieldFour' => null,
+			),
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'map')
+		);
+	}
+
+	/**
+	 * Tests the _removeElement method
+	 *
+	 * @covers ::_removeElement
+	 * @return void
+	 */
+	public function testRemoveElement()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePublicElementMethods',
+			null,
+			array($this->test)
+		);
+
+		$this->page->removeElement('fieldTwo');
+
+		$this->assertEquals(
+			array(
+				'fieldOne' => 'field_1',
+				'fieldThree' => 'field_3',
+			),
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'map')
+		);
+	}
+
+	/**
+	 * Tests the _removeElement method with nonexistent field
+	 *
+	 * @covers ::_removeElement
+	 * @return void
+	 */
+	public function testRemoveElementNonexistent()
+	{
+		$this->page = $this->getMock(
+			'ExamplePagePublicElementMethods',
+			null,
+			array($this->test)
+		);
+
+		$this->page->removeElement('never_heard_of');
+
+		$this->assertEquals(
+			array(
+				'fieldOne' => 'field_1',
+				'fieldTwo' => 'field_2',
+				'fieldThree' => 'field_3',
+			),
+			PHPUnit_Framework_Assert::readAttribute($this->page, 'map')
+		);
+	}
+
 }
 
 /**
@@ -730,6 +900,31 @@ class ExamplePageAssertCustomPageTitle extends ExamplePage {
 
 	public function assertCustomPageTitle() {
 		$this->_assertPageTitle('Custom title');
+	}
+
+}
+
+/**
+ * Page with public element methods
+ *
+ * This is done for testing only!
+ */
+class ExamplePagePublicElementMethods extends ExamplePage {
+
+	public function byMap($field) {
+		return $this->byMap($field);
+	}
+
+	public function getLocator($field) {
+		return $this->_getLocator($field);
+	}
+
+	public function addElement($field, $locator) {
+		$this->_addElement($field, $locator);
+	}
+
+	public function removeElement($field) {
+		$this->_removeElement($field);
 	}
 
 }

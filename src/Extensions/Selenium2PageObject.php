@@ -219,6 +219,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * A callback method BEFORE the on load assertions
 	 *
 	 * @return void
+	 * @todo Rename to _beforeIsLoadedAssertions
 	 */
 	protected function _beforeOnLoadAssertions()
 	{
@@ -228,6 +229,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * A callback method AFTER the on load assertions
 	 *
 	 * @return void
+	 * @todo Rename to _afterIsLoadedAssertions
 	 */
 	protected function _afterOnLoadAssertions()
 	{

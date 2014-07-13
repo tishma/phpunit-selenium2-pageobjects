@@ -84,9 +84,14 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * validated to ensure it exists on the page when the PageObject is
 	 * instantiated.
 	 *
+	 * The key can be any string.
+	 * The locator on the other hand must be a CSS selector compatible locator.
+	 * XPath is not supported, use the method byXPath instead.
+	 *
+	 * Remember the preferred selector order:
+	 * id > name > css [> xpath]
+	 *
 	 * @var array
-	 * @see _assertElementsPresent::_assertElements()
-	 * @link
 	 */
 	protected $map = array();
 
@@ -103,6 +108,22 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * @var array
 	 */
 	protected $excludeElementsCheckOnLoad = array();
+
+	/**
+	 * Shall it also load the page when the page object gets constructed?
+	 *
+	 * @var bool
+	 */
+	protected $loadOnConstruct = false;
+
+	/**
+	 * Shall it call the on load assertions when the page object gets constructed?
+	 *
+	 * Only relevant when $loadOnConstruct = false.
+	 *
+	 * @var bool
+	 */
+	protected $checkIsLoadedOnConstruct = false;
 
 	/**
 	 * Create the PageObject and set the test/WebDriver
@@ -124,6 +145,12 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 		if ($pageTitle) {
 			$this->pageTitle = $pageTitle;
 		}
+
+		if ($this->loadOnConstruct === true) {
+			$this->load();
+		} elseif ($this->checkIsLoadedOnConstruct === true) {
+			$this->_assertIsLoaded();
+		}
 	}
 
 	/**
@@ -132,18 +159,12 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 * Traditionally the set URl, page title and all mapped elements
 	 * should be present after loading the page.
 	 * But since this is not ALWAYS the case, we can disable these checks
-	 * or can exclude some elemnets from the map to be asserted.
-	 *
-	 * If you need to do something before or after the on load assertions,
-	 * you can do so in _beforeOnLoadAssertions and _afterOnLoadAssertions
-	 * respecitvely.
+	 * or can exclude some elements from the map to be asserted.
 	 *
 	 * @param null|string $url An optional URL to load.
 	 * @return self
 	 * @throws UnexpectedValueException If the page URL was not set.
-	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertPreConditions
-	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertPageTitle
-	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertPageTitle
+	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertIsLoaded
 	 * @todo Cover UnexpectedValueException
 	 * @todo Cover default URL
 	 * @todo Cover specific URL
@@ -159,6 +180,26 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 
 		$this->test->url($this->url);
 
+		$this->_assertIsLoaded();
+
+		return $this;
+	}
+
+	/**
+	 * Calls the URL, page title and elements assertions
+	 *
+	 * If you need to do something before or after the on load assertions,
+	 * you can do so in _beforeOnLoadAssertions and _afterOnLoadAssertions
+	 * respectively.
+	 *
+	 * @return void
+	 * @see PHPUnit_Extensions_Selenium2PageObject::_beforeOnLoadAssertions
+	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertPreConditions
+	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertUrl
+	 * @see PHPUnit_Extensions_Selenium2PageObject::_assertElementsPresent
+	 * @see PHPUnit_Extensions_Selenium2PageObject::_afterOnLoadAssertions
+	 */
+	protected function _assertIsLoaded() {
 		$this->_beforeOnLoadAssertions();
 
 		if (!$this->doNotCheckUrlOnLoad) {
@@ -172,8 +213,6 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 		}
 
 		$this->_afterOnLoadAssertions();
-
-		return $this;
 	}
 
 	/**

@@ -43,8 +43,8 @@ class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 		$home->load();
 		$home->setPerson($person);
 		$view = $home->save();
-
-		// TODO Assert person is same on view page
+		$this->assertEquals($person->getRealName(), $view->getRealName());
+		$this->assertEquals($person->getGenderString(), $view->getGenderString());
 	}
 
 	/**
@@ -64,12 +64,12 @@ class SubmitTest extends PHPUnit_Extensions_Selenium2TestCase
 		$person = new PersonModel();
 		$person->setRealName('Esley Svanas');
 		$person->setGender(PersonModel::G_FEMALE);
-		//$r[] = array($person);
+		$r[] = array($person);
 
 		$person = new PersonModel();
 		$person->setRealName('Nina Arsenault');
 		$person->setGender(PersonModel::G_OTHER);
-		//$r[] = array($person);
+		$r[] = array($person);
 
 		return $r;
 	}

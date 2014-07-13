@@ -18,30 +18,75 @@
 class ViewPage extends PHPUnit_Extensions_Selenium2PageObject
 {
 	/**
+	 * @var string
+	 */
+	protected $url = 'view.php';
+
+	/**
+	 * The page title
+	 *
+	 * @var string
+	 */
+	protected $pageTitle = 'View your data';
+
+	/**
+	 * The key to UI locator map
+	 *
+	 * A mapping of unique keys to locator strings. Each one of these is
+	 * validated to ensure it exists on the page when the PageObject is
+	 * instantiated.
+	 *
+	 * The key can be any string.
+	 * The locator on the other hand must be a CSS selector compatible locator.
+	 * XPath is not supported, use the method byXPath instead.
+	 *
+	 * Remember the preferred selector order:
+	 * id > name > css [> xpath]
+	 *
 	 * @var array
 	 */
 	protected $map = array(
-		'header' => '//h1[@id="title"]',
+		'header' => 'h1#title',
 		'real_name' => '#output_your_name',
 		'gender' => '#output_your_gender'
 	);
 
 	/**
-	 * Assert pre conditions callback
+	 * Shall it call the on load assertions when the page object gets constructed?
+	 *
+	 * Only relevant when $loadOnConstruct = false.
+	 *
+	 * @var bool
 	 */
-	public function assertPreConditions()
-	{
+	protected $checkIsLoadedOnConstruct = true;
+
+	/**
+	 * A callback method AFTER the on load assertions
+	 *
+	 * @return void
+	 */
+	protected function _afterOnLoadAssertions() {
 		$this->test->assertEquals('Viewing your data', $this->_byMap('header')->text());
 	}
 
 	/**
 	 * Gets the real name
 	 *
-	 * @return mixed
+	 * @return string The real name.
 	 */
 	public function getRealName()
 	{
 		return $this->_byMap('real_name')->text();
+	}
+
+	/**
+	 * Gets the gender string
+	 *
+	 * @return string The gender string.
+	 */
+	public function getGenderString()
+	{
+		return $this->_byMap('gender')->text();
 	}
 
 }

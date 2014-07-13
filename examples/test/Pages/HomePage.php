@@ -18,16 +18,37 @@
 class HomePage extends PHPUnit_Extensions_Selenium2PageObject
 {
 	/**
-	 * The URL
+	 * The page URL
 	 *
 	 * Must be set per page individually.
+	 * Should be a relative URL preferably.
+	 * Set the base URL in your test(s).
 	 *
 	 * @var string
+	 * @see PHPUnit_Extensions_Selenium2TestCase::setBrowserUrl
 	 */
 	protected $url = '/';
 
 	/**
-	 * The element map
+	 * The page title
+	 *
+	 * @var string
+	 */
+	protected $pageTitle = 'Enter your data';
+
+	/**
+	 * The key to UI locator map
+	 *
+	 * A mapping of unique keys to locator strings. Each one of these is
+	 * validated to ensure it exists on the page when the PageObject is
+	 * instantiated.
+	 *
+	 * The key can be any string.
+	 * The locator on the other hand must be a CSS selector compatible locator.
+	 * XPath is not supported, use the method byXPath instead.
+	 *
+	 * Remember the preferred selector order:
+	 * id > name > css [> xpath]
 	 *
 	 * @var array
 	 */

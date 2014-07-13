@@ -45,6 +45,7 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			'PHPUnit_Extensions_Selenium2TestCase',
 			array('url', 'title', 'byCssSelector')
 		);
+		$this->test->setBrowserUrl('http://localhost/');
 	}
 
 	/**
@@ -167,7 +168,8 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 		$this->page->expects($this->once())
 			->method('_assertIsLoaded');
 
-		$this->page->load();
+		$returned = $this->page->load();
+		$this->assertInstanceOf('ExamplePage', $returned);
 	}
 
 	/**
@@ -183,6 +185,13 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			array('_assertIsLoaded'),
 			array($this->test)
 		);
+
+		$this->test->expects($this->once())
+			->method('url')
+			->with($this->equalTo('foo123.html'));
+
+		$this->page->expects($this->once())
+			->method('_assertIsLoaded');
 
 		$this->page->load(null);
 	}
@@ -366,80 +375,127 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests whether load calls url with the default URL
+	 * Tests the _assertUrl method
 	 *
-	 * @covers ::load
+	 * @covers ::_assertUrl
 	 * @return void
 	 */
-	/*public function testLoadCallsUrlWithDefault()
+	public function testAssertUrl()
 	{
-		$expectedUrl = 'foo123.html';
-
 		$this->page = $this->getMock(
-			'MockPage',
-			array('_assertPreConditions', 'assertPageTitle', '_assertMapConditions'),
+			'ExamplePage',
+			array(
+				'_beforeOnLoadAssertions',
+				'_assertPageTitle',
+				'_assertElementsPresent',
+				'_afterOnLoadAssertions'
+			),
 			array($this->test)
 		);
 
-		$this->test->expects($this->once())
+		$this->test->expects($this->any())
 			->method('url')
-			->with($this->equalTo($expectedUrl));
+			->will($this->returnValue('http://localhost/foo123.html'));
 
 		$this->page->load();
-	}*/
+	}
 
 	/**
-	 * Tests whether load calls url with the URL given
+	 * Tests the _assertUrl method with too many slashes
 	 *
-	 * @covers ::load
+	 * @covers ::_assertUrl
 	 * @return void
 	 */
-	/*public function testLoadCallsUrlWithUrlGiven()
+	public function testAssertUrlWithTooManySlashes()
 	{
-		$url = 'foo.html';
-
 		$this->page = $this->getMock(
-			'MockPage',
-			array('_assertPreConditions', 'assertPageTitle', '_assertMapConditions'),
+			'ExamplePageUrlWithTooManySlashes',
+			array(
+				'_beforeOnLoadAssertions',
+				'_assertPageTitle',
+				'_assertElementsPresent',
+				'_afterOnLoadAssertions'
+			),
 			array($this->test)
 		);
 
-		$this->test->expects($this->once())
+		$this->test->setBrowserUrl('http://localhost/////');
+
+		$this->test->expects($this->any())
 			->method('url')
-			->with($this->equalTo($url));
+			->will($this->returnValue('http://localhost/omg.wtf'));
 
-		$this->page->load($url);
-	}*/
+		$this->page->load();
+	}
 
 	/**
-	 * Tests whether load return value equals the page object
+	 * Tests the _assertUrl method with an absolute URL
 	 *
-	 * @covers ::load
+	 * @covers ::_assertUrl
 	 * @return void
 	 */
-	/*public function testLoadReturnsThis()
+	public function testAssertUrlAbsoluteUrl()
 	{
 		$this->page = $this->getMock(
-			'MockPage',
-			array('_assertPreConditions', 'assertPageTitle', '_assertMapConditions'),
+			'ExamplePageAbsoluteUrl',
+			array(
+				'_beforeOnLoadAssertions',
+				'_assertPageTitle',
+				'_assertElementsPresent',
+				'_afterOnLoadAssertions'
+			),
 			array($this->test)
 		);
 
-		$returned = $this->page->load();
-		$this->assertInstanceOf('MockPage', $returned);
-	}*/
+		$this->test->expects($this->any())
+			->method('url')
+			->will($this->returnValue('http://other.host/foobar.php'));
+
+		$this->page->load();
+	}
+
+	/**
+	 * Tests the _assertUrl method with parameter
+	 *
+	 * @covers ::_assertUrl
+	 * @return void
+	 */
+	public function testAssertUrlWithParameter()
+	{
+		$this->page = $this->getMock(
+			'ExamplePageAssertCustomUrl',
+			array(
+				'_beforeOnLoadAssertions',
+				'_assertPageTitle',
+				'_assertElementsPresent',
+				'_afterOnLoadAssertions'
+			),
+			array($this->test)
+		);
+
+		$this->test->expects($this->any())
+			->method('url')
+			->will($this->returnValue('http://localhost/custom.file'));
+
+		$this->page->assertCustomUrl();
+	}
 
 	/**
 	 * Tests the method assertPageTitle
 	 *
-	 * @covers ::assertPageTitle
+	 * @covers ::_assertPageTitle
 	 * @return void
 	 */
-	/*public function testAssertPageTitle()
+	public function testAssertPageTitle()
 	{
 		$this->page = $this->getMock(
-			'MockPage',
-			null,
+			'ExamplePage',
+			array(
+				'_beforeOnLoadAssertions',
+				'_assertUrl',
+				'_assertElementsPresent',
+				'_afterOnLoadAssertions'
+			),
 			array($this->test)
 		);
 
@@ -447,30 +503,34 @@ class Selenium2PageObjectTest extends PHPUnit_Framework_TestCase
 			->method('title')
 			->will($this->returnValue('Foo 123'));
 
-		$this->page->assertPageTitle();
-	}*/
+		$this->page->load();
+	}
 
 	/**
-	 * Tests whether assertPageTitle return value equals the page object
+	 * Tests the assertPageTitle method with parameter
 	 *
-	 * @covers ::assertPageTitle
+	 * @covers ::_assertPageTitle
 	 * @return void
 	 */
-	/*public function testAssertPageTitleReturnsThis()
+	public function testAssertPageTitleWithParameter()
 	{
 		$this->page = $this->getMock(
-			'MockPage',
-			null,
+			'ExamplePageAssertCustomPageTitle',
+			array(
+				'_beforeOnLoadAssertions',
+				'_assertUrl',
+				'_assertElementsPresent',
+				'_afterOnLoadAssertions'
+			),
 			array($this->test)
 		);
 
 		$this->test->expects($this->any())
 			->method('title')
-			->will($this->returnValue('Foo 123'));
+			->will($this->returnValue('Custom title'));
 
-		$returned =	$this->page->assertPageTitle();
-		$this->assertInstanceOf('MockPage', $returned);
-	}*/
+		$this->page->assertCustomPageTitle();
+	}
 
 	/**
 	 * Tests the _assertMapConditions method
@@ -631,5 +691,45 @@ class ExamplePageDoNotCheckPageTitleOnLoad extends ExamplePage {
 class ExamplePageDoNotCheckElementsOnLoad extends ExamplePage {
 
 	protected $doNotCheckElementsOnLoad = true;
+
+}
+
+/**
+ * Page with absolute URL set
+ */
+class ExamplePageAbsoluteUrl extends ExamplePage {
+
+	protected $url = 'http://other.host/foobar.php';
+
+}
+
+/**
+ * Page with URL with too many slashes
+ */
+class ExamplePageUrlWithTooManySlashes extends ExamplePage {
+
+	protected $url = '////omg.wtf';
+
+}
+
+/**
+ * Page with assertion of custom URL
+ */
+class ExamplePageAssertCustomUrl extends ExamplePage {
+
+	public function assertCustomUrl() {
+		$this->_assertUrl('custom.file');
+	}
+
+}
+
+/**
+ * Page with assertion of custom page title
+ */
+class ExamplePageAssertCustomPageTitle extends ExamplePage {
+
+	public function assertCustomPageTitle() {
+		$this->_assertPageTitle('Custom title');
+	}
 
 }

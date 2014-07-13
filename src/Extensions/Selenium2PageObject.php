@@ -240,8 +240,6 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	 *
 	 * @param null|string $url An optional URL to assert.
 	 * @return void
-	 * @todo Cover absolute URL.
-	 * @todo Cover relative URL.
 	 * @todo Cover base with beginning and relative URL with trailing slash.
 	 * @todo What if there is no absolute URl and no base URl set?
 	 */

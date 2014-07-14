@@ -300,7 +300,7 @@ abstract class PHPUnit_Extensions_Selenium2PageObject
 	/**
 	 * Returns an element locator through its field name by map
 	 *
-	 * @param string $field The fiel name.
+	 * @param string $field The field name.
 	 * @return PHPUnit_Extensions_Selenium2TestCase_Element The element.
 	 */
 	protected function _byMap($field)

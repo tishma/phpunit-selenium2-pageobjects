@@ -1,6 +1,6 @@
 # How to contribute
 
-Your contribution to the project is very welcomed.
+Your contribution to this project is greatly appreciated.
 Please help keeping the life of the project maintainer easy by sticking to the following guidelines:
 
 Thank you and enjoy coding!

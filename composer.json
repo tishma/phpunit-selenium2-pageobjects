@@ -1,5 +1,5 @@
 {
-    "name": "ravage84/phpunit-selenium2-pageobjects",
+    "name": "tishma/phpunit-selenium2-pageobjects",
     "description": "PHPUnit Selenium2 PageObjects",
     "type": "library",
     "keywords": [
